@@ -11,6 +11,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/sponsors/earondemands-sys"><img src="https://img.shields.io/badge/❤️_Sponsor_on_GitHub-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="GitHub Sponsors"></a>
   <a href="https://github.com/earondemands-sys"><img src="https://img.shields.io/badge/GitHub-@earondemands--sys-181717?style=for-the-badge&logo=github" alt="GitHub"></a>
   <a href="https://buymeacoffee.com/jaykrishna7"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee"></a>
 </p>
@@ -327,11 +328,13 @@ Tests build synthetic media with macOS `say` and ffmpeg. They never call a paid 
 ### 💖 Support This Project
 
 <p>
-  <a href="https://github.com/earondemands-sys"><img src="https://img.shields.io/badge/⭐_Star_on_GitHub-181717?style=for-the-badge&logo=github" alt="Star on GitHub"></a>
-  <a href="https://buymeacoffee.com/jaykrishna7"><img src="https://img.shields.io/badge/☕_Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee"></a>
+  <a href="https://github.com/sponsors/earondemands-sys"><img src="https://img.shields.io/badge/❤️_Sponsor-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="GitHub Sponsors"></a>
+  <a href="https://github.com/earondemands-sys"><img src="https://img.shields.io/badge/⭐_Star-181717?style=for-the-badge&logo=github" alt="Star on GitHub"></a>
+  <a href="https://buymeacoffee.com/jaykrishna7"><img src="https://img.shields.io/badge/☕_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee"></a>
 </p>
 
 If you find this project useful, consider:
+- ❤️ **Sponsoring on GitHub** at [github.com/sponsors/earondemands-sys](https://github.com/sponsors/earondemands-sys)
 - ⭐ **Starring the repo** on [GitHub](https://github.com/earondemands-sys/YouTubeAgent)
 - ☕ **Buying me a coffee** at [buymeacoffee.com/jaykrishna7](https://buymeacoffee.com/jaykrishna7)
 - 🎥 **Subscribing** to [EarOnDemands](https://www.youtube.com/channel/UC5Bk7u6bp-p3-OeV9qlsMdA)
