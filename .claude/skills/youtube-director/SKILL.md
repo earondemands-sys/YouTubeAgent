@@ -4,9 +4,9 @@ description: >-
   The Director of an 18-agent YouTube + Instagram team: takes a raw recording or a topic and runs it
   end to end - edit, script, voiceover, b-roll, Remotion render in one of 10 styles, Shorts, Reels,
   title, thumbnail, SEO, QA, upload to YouTube and/or Instagram, analytics - and answers the comments
-  on both, stopping only to ask the user. Use for "make a video", "new video", "edit and upload
+  on both and the Instagram DMs, stopping only to ask the user. Use for "make a video", "new video", "edit and upload
   this", "faceless video on X", "post this to Instagram", "youtube agent", "run the pipeline",
-  "continue <video>", "what's the status", "plan my week", "reply to my comments", or a raw video path.
+  "continue <video>", "what's the status", "plan my week", "reply to my comments", "answer my DMs", or a raw video path.
 ---
 
 # youtube-director
@@ -126,14 +126,16 @@ user can say "post my queued Reels".
 
 ## Replying to comments
 
-"Reply to my comments", "handle comments", or a scheduled run. Not a video - no project.
+"Reply to my comments", "answer my DMs", "handle comments", or a scheduled run. Not a video - no project.
 
 1. `.venv/bin/python scripts/comments.py inbox` - collects the new comments on YouTube and
-   Instagram that nobody has answered (`--platform youtube|instagram` for one). It reports how many
+   Instagram and the Instagram DMs that nobody has answered (`--platform youtube|instagram|dms`
+   for one). It reports how many
    per platform and any platform that is not signed in; say which, do not stop the other.
 2. Nothing new: say so in one line and stop.
 3. Launch `engage-agent` with the brief `{"root": ..., "inbox": "<root>/engage/inbox.json",
-   "drafts": "<root>/engage/drafts.json", "voice_profile": ..., "config": ...}` (plus
+   "drafts": "<root>/engage/drafts.json", "voice_profile": ..., "config": ...,
+   "business_info": "<root>/config/business.md"}` (plus
    `"feedback"` if the user rejected the last batch).
 4. `config.engage.mode`:
    - `ask` (default): show the piles with counts, then every drafted reply as
@@ -144,8 +146,12 @@ user can say "post my queued Reels".
 5. Post: `.venv/bin/python scripts/comments.py post` (`--keys k1,k2` for a subset). It refuses
    replies with links, never answers anyone twice and stops at `engage.max_replies_per_run`.
    Report what was posted, refused and left for the next run, and the agent's pin suggestions
-   (the APIs cannot pin).
-6. Offer once to schedule this every few hours (the `schedule` skill) - in `ask` mode each run
+   (the APIs cannot pin). **Flagged DMs go to the top of the report**: who, what they want, and
+   how many hours are left before Instagram's 24-hour window closes - after that only the user can
+   answer, in the app.
+   First DM run and `config/business.md` is still the template: tell the user the bot will flag
+   every price or offer question until they fill it in.
+6. Offer once to schedule this every hour or two (DMs have the 24-hour window) (the `schedule` skill) - in `ask` mode each run
    still waits for the user's yes.
 
 ## Planning a week

@@ -43,7 +43,7 @@
 | ✅ **QAs before upload** | Codec, loudness (−14 LUFS), black frames, silences, Shorts, thumbnail, title/description/tag limits, chapters, credits, AI disclosure. |
 | 🚀 **Uploads & schedules** | YouTube Data API: resumable upload, thumbnail, scheduling, `containsSyntheticMedia`, and a daily quota ledger that spreads Shorts across days. |
 | 📸 **Posts to Instagram too** | Pick YouTube, Instagram or both per video. The Shorts become Reels with their own caption, hashtags and cover frame, checked against Instagram's limits, posted now or queued for later. |
-| 💬 **Answers your comments** | Collects new comments on YouTube and Instagram, drafts replies in your voice from what the video actually says, hides spam, and posts after your yes (or on its own, if you set it to). Never answers anyone twice. |
+| 💬 **Answers comments and DMs** | Collects new comments on YouTube and Instagram and your Instagram DMs, drafts replies in your voice from what the video and your business notes actually say, hides spam, flags money and collab messages to you, and posts after your yes (or on its own, if you set it to). Never answers anyone twice. |
 | 📈 **Learns afterwards** | Pulls retention and comments, names the single biggest leak, drafts replies (never posts them), and feeds ideas to the planner. |
 
 ## 🧭 The pipeline
@@ -223,6 +223,7 @@ Talk to Claude in plain words, in any language:
 "plan my week"
 "post this one to YouTube and Instagram"
 "reply to my comments"
+"answer my DMs"
 "continue servicenow-ep5"
 "status"
 ```

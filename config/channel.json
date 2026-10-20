@@ -79,7 +79,8 @@
     "mode": "ask",
     "platforms": [
       "youtube",
-      "instagram"
+      "instagram",
+      "instagram-dm"
     ],
     "lookback_days": 14,
     "instagram_posts": 25,
@@ -87,6 +88,8 @@
     "delay_seconds": [
       8,
       20
-    ]
+    ],
+    "dm_allowed_links": [],
+    "business_info": "config/business.md"
   }
 }

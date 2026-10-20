@@ -69,6 +69,28 @@ cd ~/Desktop/YouTubeAgent && python3 scripts/instagram_auth.py --check
 
 It should print `signed in as: @<your handle> (MEDIA_CREATOR)` or `(BUSINESS)`.
 
+## 6. DMs (for auto-replies to messages)
+
+1. **Let the API see your messages.** Instagram app -> Settings and activity -> **Messages and
+   story replies -> Message controls -> Connected tools -> Allow access to messages: ON**.
+2. **Testing:** in Development mode the bot can only DM accounts that have a role on the app.
+   Add a second Instagram account (a friend's or a spare) as an Instagram Tester (step 4), message
+   your business account from it, and say "answer my DMs" to try it.
+3. **Real customers need Meta's approval** of the `instagram_business_manage_messages` permission
+   (App Review, one time):
+   - App dashboard -> **App settings -> Basic**: add a **Privacy Policy URL** (a simple page on your
+     site saying what the app reads and that nothing is shared) and an app icon.
+   - **App Review -> Permissions and features** -> `instagram_business_manage_messages` ->
+     **Request advanced access**. Explain it honestly: "Replies to DMs sent to my own business
+     account, in my voice, within 24 hours." Attach a short screen recording of the bot answering
+     a tester's DM.
+   - Meta may ask for **Business verification** first. Approval usually takes a few days to a
+     couple of weeks. Then switch the app to **Live**.
+   Comments and Reels keep working the whole time. Only DMs to non-testers wait for this.
+4. **What the bot may say:** fill in [`config/business.md`](../config/business.md) - offers, prices,
+   links, and what must always come to you. Until it is filled, every price or offer question is
+   flagged to you instead of answered.
+
 ## Done when
 
 - `python3 scripts/doctor.py` shows INSTAGRAM ready
@@ -84,6 +106,10 @@ It should print `signed in as: @<your handle> (MEDIA_CREATOR)` or `(BUSINESS)`.
 - **Trending sounds can't be added by the API.** The Reels keep their own audio. To use a trending
   sound, add it in the Instagram app after posting, or post that one Reel by hand.
 - **Pinning comments** isn't available in the API. The engage agent tells you which one to pin.
+- **The 24-hour rule for DMs.** An app can only answer within 24 hours of the person's last message.
+  After that the bot leaves it; you answer in the app. Run "answer my DMs" at least every few hours.
+- **Already signed in before DMs were added?** Run `python3 scripts/instagram_auth.py` once more so
+  the token includes the messages permission.
 
 ## Troubleshooting
 
@@ -94,3 +120,5 @@ It should print `signed in as: @<your handle> (MEDIA_CREATOR)` or `(BUSINESS)`.
 | Publishing fails with an account type error | Step 1: the account must be Creator or Business |
 | `state does not match` | You pasted an address from an older attempt; run the script again |
 | `Instagram sign-in expired` | Run `python3 scripts/instagram_auth.py` again |
+| DM inbox stays empty though you have messages | Step 6.1 (Connected tools) is off, or the sender has no role on the app yet (step 6.2/6.3) |
+| `(#10) ... outside of allowed window` | More than 24 hours since their message - answer it in the app |

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""comments.py - answer the people who comment on your videos, on YouTube and Instagram.
+"""comments.py - answer the people who comment on your videos and DM you, on YouTube and Instagram.
 
-    .venv/bin/python scripts/comments.py inbox [--platform all|youtube|instagram] [--days 14]
+    .venv/bin/python scripts/comments.py inbox [--platform all|youtube|instagram|dms] [--days 14]
     .venv/bin/python scripts/comments.py post  [--dry-run] [--max 25] [--keys yt:abc,ig:123]
     .venv/bin/python scripts/comments.py ledger                      # what has been answered so far
 
@@ -9,7 +9,7 @@
 handled in an earlier run. It writes engage/inbox.json. The engage agent reads that, triages it the
 yt-comment way and writes engage/drafts.json:
 
-  {"items": [{"key": "yt:Ugx...", "action": "reply|hide|skip", "text": "...", "pile": "question"}]}
+  {"items": [{"key": "yt:Ugx...", "action": "reply|hide|skip|flag", "text": "...", "pile": "question"}]}
 
 `post` sends the drafts. It only acts on keys that are in the inbox, so a draft can never point a
 reply somewhere else. Replies with links are refused. Every handled key goes into
@@ -18,6 +18,14 @@ engage/ledger.json, so nobody is answered twice and skipped comments are not tri
 Costs: a YouTube reply or hold is 50 quota units (shared with uploads, see youtube_upload.py).
 Instagram has no unit cost but rate-limits bursts; replies are spaced out (engage.delay_seconds).
 "hide" holds a YouTube comment for review in Studio, and hides an Instagram one (both reversible).
+"flag" leaves the item for the user to answer by hand (business, money, complaints); it is not
+recorded, so it shows up again until someone answers it.
+
+Instagram DMs (keys `dm:<message id>`): a thread is in the inbox when its newest message is not
+yours. Meta lets an app answer only within 24 hours of the person's last message, so the inbox only
+looks at the last day and `post` refuses a reply once that window has closed. DM replies may
+contain links only from `engage.dm_allowed_links`. While the Meta app is in Development mode, only
+accounts with a role on the app can be messaged (docs/SETUP-INSTAGRAM.md, step 6).
 """
 import argparse, datetime as dt, glob, json, os, random, re, sys, time
 
@@ -28,7 +36,9 @@ PROJECTS = os.environ.get("YTA_PROJECTS") or os.path.join(ROOT, "projects")
 ENGAGE = os.environ.get("YTA_ENGAGE") or os.path.join(ROOT, "engage")
 INBOX, DRAFTS, LEDGER = (os.path.join(ENGAGE, f) for f in ("inbox.json", "drafts.json", "ledger.json"))
 YT_ACTION_COST = 50
-MAX_REPLY = 500
+MAX_REPLY, MAX_DM = 500, 1000
+DM_WINDOW = dt.timedelta(hours=24)
+PLATFORM_OF = {"youtube": "youtube", "instagram": "instagram", "dms": "instagram-dm"}
 LINK = re.compile(r"https?://|www\.|\b[a-z0-9-]+\.(com|in|net|org|io|ly|me|link)\b", re.I)
 
 
@@ -166,6 +176,47 @@ def ig_act(item, action, text):
     return None
 
 
+def dm_inbox(done):
+    import instagram
+    from instagram_auth import load
+    tok = load() or {}
+    me_id, me_name = str(tok.get("user_id")), tok.get("username")
+
+    def mine(m):
+        f = m.get("from") or {}
+        return str(f.get("id")) == me_id or (me_name and f.get("username") == me_name)
+
+    items = []
+    for c in instagram.conversations(hours=DM_WINDOW.total_seconds() / 3600):
+        msgs = c["messages"]                       # newest first
+        if not msgs or mine(msgs[0]):
+            continue                               # nothing new, or we answered last
+        waiting = []
+        for m in msgs:
+            if mine(m):
+                break
+            waiting.append(m)
+        last, sender = waiting[0], waiting[0].get("from") or {}
+        key = f"dm:{last['id']}"
+        if key in done:
+            continue
+        earlier = msgs[len(waiting):len(waiting) + 4]
+        items.append({"key": key, "platform": "instagram-dm", "conversation_id": c["id"],
+                      "recipient_id": sender.get("id"), "author": sender.get("username"),
+                      "text": "\n".join(m.get("message") or "[photo, video or sticker]" for m in reversed(waiting)),
+                      "published": when(last["created_time"]).isoformat(),
+                      "window_closes": (when(last["created_time"]) + DM_WINDOW).isoformat(), "on": "DM",
+                      "context": [{"from": "you" if mine(m) else sender.get("username"), "text": m.get("message")}
+                                  for m in reversed(earlier)]})
+    return items
+
+
+def dm_act(item, action, text):
+    import instagram
+    return instagram.send_dm(item["recipient_id"], text)
+
+
+
 # ---------------------------------------------------------------- commands
 
 def cmd_inbox(a):
@@ -174,11 +225,16 @@ def cmd_inbox(a):
     cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days)
     done = read(LEDGER, {})
     idx = project_index()
-    wanted = c.get("platforms", ["youtube", "instagram"]) if a.platform == "all" else [a.platform]
+    wanted = c.get("platforms", ["youtube", "instagram", "instagram-dm"]) if a.platform == "all" else [PLATFORM_OF[a.platform]]
     items, errors = [], {}
     for p in wanted:
         try:
-            items += yt_inbox(cutoff, done, idx) if p == "youtube" else ig_inbox(cutoff, done, idx, c.get("instagram_posts", 25))
+            if p == "youtube":
+                items += yt_inbox(cutoff, done, idx)
+            elif p == "instagram":
+                items += ig_inbox(cutoff, done, idx, c.get("instagram_posts", 25))
+            else:
+                items += dm_inbox(done)
         except SystemExit as e:          # not signed in to that platform
             errors[p] = str(e)
         except Exception as e:           # one platform down should not hide the other
@@ -189,13 +245,24 @@ def cmd_inbox(a):
     print(json.dumps({"inbox": INBOX, "new": counts, "errors": errors}, indent=2))
 
 
-def validate(text):
+def validate(text, item=None, allowed_links=()):
     text = (text or "").strip()
+    dm = bool(item and item.get("platform") == "instagram-dm")
+    limit = MAX_DM if dm else MAX_REPLY
     if not text:
         return "empty reply"
-    if len(text) > MAX_REPLY:
-        return f"reply is {len(text)} characters, max {MAX_REPLY}"
-    if LINK.search(text):
+    if len(text) > limit:
+        return f"reply is {len(text)} characters, max {limit}"
+    if dm:
+        closes = item.get("window_closes")
+        if closes and dt.datetime.now(dt.timezone.utc) >= when(closes):
+            return "Instagram's 24-hour reply window has closed - answer this one by hand in the app"
+        rest = text
+        for ok in allowed_links:
+            rest = rest.replace(ok, "")
+        if LINK.search(rest):
+            return "DM contains a link that is not in engage.dm_allowed_links"
+    elif LINK.search(text):
         return "reply contains a link - links in auto-replies read as spam and are refused"
     return None
 
@@ -208,7 +275,8 @@ def cmd_post(a):
     only = set(a.keys.split(",")) if a.keys else None
     cap = a.max or c.get("max_replies_per_run", 25)
     lo, hi = (c.get("delay_seconds") or [8, 20])[:2]
-    res = {"replied": [], "hidden": [], "skipped": 0, "refused": [], "failed": [], "left_for_next_run": 0}
+    links = tuple(c.get("dm_allowed_links") or ())
+    res = {"replied": [], "hidden": [], "skipped": 0, "flagged": [], "refused": [], "failed": [], "left_for_next_run": 0}
     acted = 0
     for d in drafts:
         key, action = d.get("key"), d.get("action")
@@ -225,11 +293,15 @@ def cmd_post(a):
             if not a.dry_run:
                 done[key] = {"action": "skip", "at": dt.datetime.now().astimezone().isoformat(), "pile": d.get("pile")}
             continue
-        if action not in ("reply", "hide"):
-            res["refused"].append({"key": key, "why": f"unknown action {action!r}"})
+        if action == "flag":
+            res["flagged"].append({"key": key, "platform": item["platform"], "from": item["author"],
+                                   "text": item["text"], "why": d.get("note") or d.get("pile")})
+            continue
+        if action not in ("reply", "hide") or (action == "hide" and item["platform"] == "instagram-dm"):
+            res["refused"].append({"key": key, "why": f"{action!r} is not an action for {item['platform']}"})
             continue
         text = (d.get("text") or "").strip()
-        if action == "reply" and (why := validate(text)):
+        if action == "reply" and (why := validate(text, item, links)):
             res["refused"].append({"key": key, "why": why})
             continue
         if acted >= cap:
@@ -242,7 +314,8 @@ def cmd_post(a):
         if acted:
             time.sleep(random.uniform(lo, hi))
         try:
-            rid = (yt_act if item["platform"] == "youtube" else ig_act)(item, action, text)
+            act = {"youtube": yt_act, "instagram": ig_act, "instagram-dm": dm_act}[item["platform"]]
+            rid = act(item, action, text)
         except (Exception, SystemExit) as e:
             res["failed"].append({"key": key, "why": f"{type(e).__name__}: {e}"})
             if "quota" in str(e).lower():
@@ -272,7 +345,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = p.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("inbox")
-    s.add_argument("--platform", choices=["all", "youtube", "instagram"], default="all")
+    s.add_argument("--platform", choices=["all", *PLATFORM_OF], default="all")
     s.add_argument("--days", type=float)
     s.set_defaults(fn=cmd_inbox)
     s = sub.add_parser("post")

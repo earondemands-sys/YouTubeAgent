@@ -231,5 +231,87 @@ class TestCommentPosting(unittest.TestCase):
         self.assertEqual(json.load(open(comments.LEDGER))["yt:D"]["action"], "skip")
 
 
+def iso(delta_hours):
+    return (dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=delta_hours)).strftime("%Y-%m-%dT%H:%M:%S+0000")
+
+
+ME = {"id": "17841400000000000", "username": "earondemands"}
+
+
+class TestDMs(unittest.TestCase):
+    def setUp(self):
+        for f in (comments.LEDGER, comments.DRAFTS):
+            if os.path.exists(f):
+                os.remove(f)
+        ravi = {"id": "IGSID-RAVI", "username": "ravi"}
+        threads = [
+            {"id": "T1", "messages": [  # newest first: two unanswered after our reply
+                {"id": "m3", "created_time": iso(-1), "from": ravi, "message": "price entha?"},
+                {"id": "m2", "created_time": iso(-1.1), "from": ravi, "message": "course details kavali"},
+                {"id": "m1", "created_time": iso(-30), "from": ME, "message": "Hi Ravi!"}]},
+            {"id": "T2", "messages": [  # we answered last
+                {"id": "n2", "created_time": iso(-2), "from": ME, "message": "Welcome!"},
+                {"id": "n1", "created_time": iso(-3), "from": {"id": "X", "username": "x"}, "message": "hi"}]},
+        ]
+        self.saved = (instagram.conversations, comments.dm_act, comments.cfg, instagram_auth.TOKEN)
+        instagram.conversations = lambda hours=24: threads
+        self.sent = []
+        comments.dm_act = lambda item, action, text: self.sent.append((item["recipient_id"], text)) or "MID"
+        comments.cfg = lambda: {"delay_seconds": [0, 0], "dm_allowed_links": ["https://earondemands.com/course"]}
+        self.tok = os.path.join(TMP, "dm-token.json")
+        instagram_auth.TOKEN = self.tok
+        instagram_auth.save({"access_token": "T", "user_id": ME["id"], "username": ME["username"],
+                             "obtained_at": int(time.time()), "expires_at": int(time.time()) + 5_000_000})
+
+    def tearDown(self):
+        instagram.conversations, comments.dm_act, comments.cfg, instagram_auth.TOKEN = self.saved
+
+    def test_inbox_takes_unanswered_threads_only(self):
+        items = comments.dm_inbox({})
+        self.assertEqual([i["key"] for i in items], ["dm:m3"])
+        i = items[0]
+        self.assertEqual(i["recipient_id"], "IGSID-RAVI")
+        self.assertEqual(i["text"], "course details kavali\nprice entha?")    # both waiting messages, in order
+        self.assertEqual(i["context"], [{"from": "you", "text": "Hi Ravi!"}])
+        self.assertEqual(comments.dm_inbox({"dm:m3": {}}), [])               # handled before
+
+    def post(self, inbox, drafts):
+        comments.write(comments.INBOX, {"items": inbox})
+        comments.write(comments.DRAFTS, {"items": drafts})
+        comments.cmd_post(types.SimpleNamespace(drafts=comments.DRAFTS, max=None, keys=None, dry_run=False))
+        return comments.read(comments.LEDGER, {})
+
+    def dm(self, key, closes_in_hours):
+        return {"key": key, "platform": "instagram-dm", "recipient_id": "R-" + key, "author": "a", "text": "hi",
+                "window_closes": (dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=closes_in_hours)).isoformat()}
+
+    def test_window_links_flag_and_hide_rules(self):
+        led = self.post(
+            [self.dm("dm:open", 5), self.dm("dm:closed", -1), self.dm("dm:link", 5), self.dm("dm:ok-link", 5),
+             self.dm("dm:flag", 5), self.dm("dm:hide", 5)],
+            [{"key": "dm:open", "action": "reply", "text": "Hi! Full roadmap video is on the channel."},
+             {"key": "dm:closed", "action": "reply", "text": "late reply"},
+             {"key": "dm:link", "action": "reply", "text": "join here https://bit.ly/x"},
+             {"key": "dm:ok-link", "action": "reply", "text": "Details: https://earondemands.com/course"},
+             {"key": "dm:flag", "action": "flag", "note": "asks for price"},
+             {"key": "dm:hide", "action": "hide"}])
+        self.assertEqual([r for r, _ in self.sent], ["R-dm:open", "R-dm:ok-link"])
+        self.assertEqual(set(led), {"dm:open", "dm:ok-link"})                 # flagged stays open for the user
+
+    def test_send_dm_request_shape(self):
+        g = FakeGraph()
+        saved = (instagram.call, instagram.token)
+        instagram.token = lambda: ("TOKEN", ME["id"])
+        instagram.call = lambda method, path, params=None, data=None, tries=4: g.calls.append((method, path, data)) or {"message_id": "mid.1"}
+        try:
+            self.assertEqual(instagram.send_dm("IGSID-RAVI", "hello"), "mid.1")
+        finally:
+            instagram.call, instagram.token = saved
+        method, path, data = g.calls[0]
+        self.assertEqual((method, path), ("POST", f"{ME['id']}/messages"))
+        self.assertEqual(json.loads(data["recipient"]), {"id": "IGSID-RAVI"})
+        self.assertEqual(json.loads(data["message"]), {"text": "hello"})
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
