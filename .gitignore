@@ -1,0 +1,15 @@
+.env
+secrets/
+.venv/
+node_modules/
+remotion/out/
+projects/*/
+!projects/.gitkeep
+assets/music/*
+!assets/music/.gitkeep
+.DS_Store
+__pycache__/
+tests/fixtures/
+tests/sandbox/
+assets/sfx/*
+!assets/sfx/.gitkeep

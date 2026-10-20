@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="496" viewBox="0 0 1280 496" role="img" aria-label="The ten editing styles, each shown as a sample frame">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A0C12"/><stop offset="1" stop-color="#11101A"/></linearGradient>
+  <linearGradient id="g-clean" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34466A"/><stop offset="1" stop-color="#1A2233"/></linearGradient>
+  <linearGradient id="g-hype" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF2E4D"/><stop offset="1" stop-color="#FF8A00"/></linearGradient>
+  <linearGradient id="g-doc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D7B27A"/><stop offset="1" stop-color="#8A6238"/></linearGradient>
+  <linearGradient id="g-list" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2563EB"/><stop offset="1" stop-color="#7C3AED"/></linearGradient>
+  <linearGradient id="g-story" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B2A4A"/><stop offset="1" stop-color="#3B3F6B"/></linearGradient>
+  <linearGradient id="g-cine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F5C63"/><stop offset=".55" stop-color="#E9895A"/><stop offset="1" stop-color="#F6B26B"/></linearGradient>
+  <clipPath id="clip"><rect width="216" height="122" rx="10"/></clipPath>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .c { fill: #141824; stroke: #283044; }
+    .nm { font-size: 16.5px; font-weight: 800; fill: #F1F3F8; }
+    .d { font-size: 12.5px; font-weight: 500; fill: #9AA3B8; }
+    .id { font-size: 11px; font-weight: 600; fill: #5E6884; font-family: Menlo, Monaco, monospace; }
+    .tag { font-size: 9.5px; font-weight: 800; letter-spacing: 1px; }
+  </style>
+</defs>
+<rect width="1280" height="496" rx="22" fill="url(#bg)"/>
+<g transform="translate(28 28)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="url(#g-clean)"/><path d="M74.0 110.0 Q76.0 68.0 108 66.0 Q140.0 68.0 142.0 110.0 Z" fill="#3B4A6B"/><circle cx="108" cy="46" r="16.0" fill="#E0A070"/><text x="108" y="108" text-anchor="middle" font-size="11.5" font-weight="800" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" >basics nundi start cheddham</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Clean Talking Head</text>
+<text x="14" y="174" class="d">face-to-camera</text>
+<rect x="14" y="182" width="73.2" height="17" rx="8.5" fill="#FF6B81" fill-opacity=".14"/><text x="50.6" y="194" text-anchor="middle" class="tag" fill="#FF6B81">RECORDED</text>
+<text x="220" y="194" text-anchor="end" class="id">clean-talking-head</text></g>
+<g transform="translate(276 28)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="#1C1E26"/><path d="M72.3 111.2 Q74.4 67.1 108 65.0 Q141.6 67.1 143.7 111.2 Z" fill="#2A2F3D"/><circle cx="108" cy="44" r="16.8" fill="#E0A070"/><text x="108" y="74" text-anchor="middle" font-size="21" font-weight="900" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" ><tspan fill="#FFD400">THIS</tspan> CHANGES</text><text x="108" y="96" text-anchor="middle" font-size="21" font-weight="900" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" >EVERYTHING</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Hormozi</text>
+<text x="14" y="174" class="d">business, advice</text>
+<rect x="14" y="182" width="43.6" height="17" rx="8.5" fill="#A3E635" fill-opacity=".14"/><text x="35.8" y="194" text-anchor="middle" class="tag" fill="#A3E635">BOTH</text>
+<text x="220" y="194" text-anchor="end" class="id">hormozi</text></g>
+<g transform="translate(524 28)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="url(#g-hype)"/><line x1="20" y1="0" x2="-40" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="46" y1="0" x2="-14" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="72" y1="0" x2="12" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="98" y1="0" x2="38" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="124" y1="0" x2="64" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="150" y1="0" x2="90" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="176" y1="0" x2="116" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="202" y1="0" x2="142" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="228" y1="0" x2="168" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><line x1="254" y1="0" x2="194" y2="122" stroke="#fff" stroke-opacity=".12" stroke-width="3"/><path d="M116.0 114.0 Q118.0 72.0 150 70.0 Q182.0 72.0 184.0 114.0 Z" fill="#1E1E1E"/><circle cx="150" cy="50" r="16.0" fill="#E0A070"/><g transform="translate(70 62) rotate(-8)"><rect x="-56" y="-20" width="112" height="36" fill="#FFD400"/><text x="0" y="8" text-anchor="middle" font-size="24" font-weight="900" fill="#111">INSANE</text></g><text x="118" y="34" style="font-size:20px">🔥</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Fast Hype</text>
+<text x="14" y="174" class="d">entertainment</text>
+<rect x="14" y="182" width="43.6" height="17" rx="8.5" fill="#A3E635" fill-opacity=".14"/><text x="35.8" y="194" text-anchor="middle" class="tag" fill="#A3E635">BOTH</text>
+<text x="220" y="194" text-anchor="end" class="id">fast-hype</text></g>
+<g transform="translate(772 28)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="url(#g-doc)"/><path d="M0 86 Q40 58 80 78 T160 70 T216 66 V122 H0 Z" fill="#4A3420"/><path d="M0 98 Q60 80 120 96 T216 90 V122 H0 Z" fill="#2E2014"/><rect x="10" y="12" width="96" height="22" fill="#000" fill-opacity=".55"/><rect x="10" y="12" width="3" height="22" fill="#FFD400"/><text x="18" y="27" font-size="10" font-weight="700" fill="#F3E3C8">ARCHIVE · 1998</text><text x="108" y="112" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" >the ticket nobody closed</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Documentary</text>
+<text x="14" y="174" class="d">stories, history</text>
+<rect x="14" y="182" width="43.6" height="17" rx="8.5" fill="#A3E635" fill-opacity=".14"/><text x="35.8" y="194" text-anchor="middle" class="tag" fill="#A3E635">BOTH</text>
+<text x="220" y="194" text-anchor="end" class="id">documentary</text></g>
+<g transform="translate(1020 28)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="#161B22"/><rect x="8" y="8" width="200" height="106" rx="6" fill="#0D1117" stroke="#30363D"/><circle cx="18" cy="16" r="2.5" fill="#FF5F57"/><circle cx="26" cy="16" r="2.5" fill="#FEBC2E"/><circle cx="34" cy="16" r="2.5" fill="#28C840"/><rect x="18" y="24" width="70" height="5" rx="2.5" fill="#FF7B72"/><rect x="28" y="35" width="96" height="5" rx="2.5" fill="#79C0FF"/><rect x="28" y="46" width="60" height="5" rx="2.5" fill="#D2A8FF"/><rect x="38" y="57" width="84" height="5" rx="2.5" fill="#7EE787"/><rect x="28" y="68" width="40" height="5" rx="2.5" fill="#79C0FF"/><rect x="18" y="79" width="30" height="5" rx="2.5" fill="#FF7B72"/><rect x="128" y="22" width="70" height="24" rx="4" fill="#0D1117" stroke="#22D3EE" stroke-width="1.5"/><text x="163" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="#7EE787" font-family="Menlo, monospace">sys_id</text><circle cx="182" cy="92" r="17" fill="#3B4A6B" stroke="#FFD400" stroke-width="2"/><circle cx="182" cy="88" r="7" fill="#E0A070"/><path d="M170 104 Q182 92 194 104" fill="#E0A070"/><text x="84" y="108" text-anchor="middle" font-size="10.5" font-weight="700" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" >query the incident table</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Tech Explainer</text>
+<text x="14" y="174" class="d">tutorials, demos</text>
+<rect x="14" y="182" width="43.6" height="17" rx="8.5" fill="#A3E635" fill-opacity=".14"/><text x="35.8" y="194" text-anchor="middle" class="tag" fill="#A3E635">BOTH</text>
+<text x="220" y="194" text-anchor="end" class="id">tech-explainer</text></g>
+<g transform="translate(28 256)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="108" height="122" fill="#24303F"/><rect x="108" width="108" height="122" fill="#3A2A2F"/><path d="M25.1 96.4 Q26.8 60.7 54 59.0 Q81.2 60.7 82.9 96.4 Z" fill="#3B4A6B"/><circle cx="54" cy="42" r="13.6" fill="#E0A070"/><path d="M133.1 96.4 Q134.8 60.7 162 59.0 Q189.2 60.7 190.9 96.4 Z" fill="#5B3A44"/><circle cx="162" cy="42" r="13.6" fill="#C98B5E"/><rect x="107" y="0" width="2" height="122" fill="#000" fill-opacity=".5"/><rect x="62" y="98" width="4" height="6" rx="2" fill="#FFD400"/><rect x="68" y="92" width="4" height="12" rx="2" fill="#FFD400"/><rect x="74" y="84" width="4" height="20" rx="2" fill="#FFD400"/><rect x="80" y="95" width="4" height="9" rx="2" fill="#FFD400"/><rect x="86" y="88" width="4" height="16" rx="2" fill="#FFD400"/><rect x="92" y="80" width="4" height="24" rx="2" fill="#FFD400"/><rect x="98" y="90" width="4" height="14" rx="2" fill="#FFD400"/><rect x="104" y="96" width="4" height="8" rx="2" fill="#FFD400"/><rect x="110" y="86" width="4" height="18" rx="2" fill="#FFD400"/><rect x="116" y="93" width="4" height="11" rx="2" fill="#FFD400"/><rect x="122" y="82" width="4" height="22" rx="2" fill="#FFD400"/><rect x="128" y="97" width="4" height="7" rx="2" fill="#FFD400"/><rect x="134" y="91" width="4" height="13" rx="2" fill="#FFD400"/><rect x="140" y="87" width="4" height="17" rx="2" fill="#FFD400"/><rect x="146" y="95" width="4" height="9" rx="2" fill="#FFD400"/><rect x="152" y="99" width="4" height="5" rx="2" fill="#FFD400"/><text x="108" y="84" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" ><tspan fill="#FFD400">so the real</tspan> question is</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Podcast</text>
+<text x="14" y="174" class="d">interviews</text>
+<rect x="14" y="182" width="73.2" height="17" rx="8.5" fill="#FF6B81" fill-opacity=".14"/><text x="50.6" y="194" text-anchor="middle" class="tag" fill="#FF6B81">RECORDED</text>
+<text x="220" y="194" text-anchor="end" class="id">podcast</text></g>
+<g transform="translate(276 256)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="url(#g-list)"/><rect width="216" height="122" fill="#000" fill-opacity=".45"/><text x="108" y="70" text-anchor="middle" font-size="52" font-weight="900" fill="#FFD400" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" >#3</text><text x="108" y="96" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" >USER TABLE</text><circle cx="22" cy="22" r="12" fill="#FFD400"/><text x="22" y="27" text-anchor="middle" font-size="13" font-weight="900" fill="#111">3</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Listicle</text>
+<text x="14" y="174" class="d">top-N, countdowns</text>
+<rect x="14" y="182" width="43.6" height="17" rx="8.5" fill="#A3E635" fill-opacity=".14"/><text x="35.8" y="194" text-anchor="middle" class="tag" fill="#A3E635">BOTH</text>
+<text x="220" y="194" text-anchor="end" class="id">listicle</text></g>
+<g transform="translate(524 256)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="url(#g-story)"/><circle cx="168" cy="28" r="12" fill="#F4F1DE"/><circle cx="174" cy="24" r="11" fill="#1B2A4A"/><path d="M0 92 L40 64 L70 84 L112 52 L150 82 L182 66 L216 88 V122 H0 Z" fill="#0B1428"/><text x="108" y="62" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" ><tspan fill="#FFD400">one night the</tspan> server</text><text x="108" y="80" text-anchor="middle" font-size="15" font-weight="900" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round" >went dark</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Storytime</text>
+<text x="14" y="174" class="d">narrated faceless</text>
+<rect x="14" y="182" width="73.2" height="17" rx="8.5" fill="#5FE0F2" fill-opacity=".14"/><text x="50.6" y="194" text-anchor="middle" class="tag" fill="#5FE0F2">FACELESS</text>
+<text x="220" y="194" text-anchor="end" class="id">storytime</text></g>
+<g transform="translate(772 256)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="#1B2230"/><path d="M39.4 107.6 Q41.2 69.8 70 68.0 Q98.8 69.8 100.6 107.6 Z" fill="#3B4A6B"/><circle cx="70" cy="50" r="14.4" fill="#E0A070"/><rect x="10" y="10" width="62" height="18" fill="#FFD400"/><text x="41" y="23" text-anchor="middle" font-size="10.5" font-weight="900" fill="#111">STEP 2/4</text><text x="78" y="23" font-size="10.5" font-weight="800" fill="#fff" stroke="#000" stroke-width="2.4" paint-order="stroke" stroke-linejoin="round">Assign it</text><rect x="128" y="36" width="78" height="62" fill="#000" fill-opacity=".7"/><rect x="128" y="36" width="3" height="62" fill="#FFD400"/><text x="136" y="51" font-size="9.5" fill="#fff" font-weight="600">✓ Log</text><text x="136" y="64" font-size="9.5" fill="#FFD400" font-weight="700">▶ Assign</text><text x="136" y="77" font-size="9.5" fill="#fff" fill-opacity=".5">○ Prioritise</text><text x="136" y="90" font-size="9.5" fill="#fff" fill-opacity=".5">○ Resolve</text><rect x="0" y="118" width="96" height="4" fill="#FFD400"/></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Step by Step</text>
+<text x="14" y="174" class="d">how-tos</text>
+<rect x="14" y="182" width="43.6" height="17" rx="8.5" fill="#A3E635" fill-opacity=".14"/><text x="35.8" y="194" text-anchor="middle" class="tag" fill="#A3E635">BOTH</text>
+<text x="220" y="194" text-anchor="end" class="id">step-by-step</text></g>
+<g transform="translate(1020 256)"><rect width="232" height="212" rx="16" class="c"/>
+<g transform="translate(8 8)" clip-path="url(#clip)"><rect width="216" height="122" fill="url(#g-cine)"/><circle cx="108" cy="78" r="16" fill="#FFD9A0" fill-opacity=".9"/><path d="M0 84 Q54 72 108 80 T216 76 V122 H0 Z" fill="#0E3B40"/><path d="M78 122 L104 82 L112 82 L138 122 Z" fill="#23292E"/><rect width="216" height="16" fill="#000"/><rect y="106" width="216" height="16" fill="#000"/><text x="108" y="52" text-anchor="middle" font-size="13" font-weight="300" letter-spacing="6" fill="#FFF3E0" font-family="Georgia, serif">THE ROAD</text></g>
+<rect x="8" y="8" width="216" height="122" rx="10" fill="none" stroke="#FFFFFF" stroke-opacity=".08"/>
+<text x="14" y="154" class="nm">Cinematic</text>
+<text x="14" y="174" class="d">vlogs, travel</text>
+<rect x="14" y="182" width="43.6" height="17" rx="8.5" fill="#A3E635" fill-opacity=".14"/><text x="35.8" y="194" text-anchor="middle" class="tag" fill="#A3E635">BOTH</text>
+<text x="220" y="194" text-anchor="end" class="id">cinematic</text></g>
+</svg>

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="362" viewBox="0 0 1280 362" role="img" aria-label="Four approval gates: script, cuts, package and publish">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A0C12"/><stop offset="1" stop-color="#11101A"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD400" stop-opacity=".16"/><stop offset="1" stop-color="#FFD400" stop-opacity=".02"/></linearGradient>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .c { fill: url(#gold); stroke: #FFD400; stroke-opacity: .35; }
+    .n { font-size: 13px; font-weight: 800; fill: #8A7A2A; }
+    .nm { font-size: 21px; font-weight: 800; fill: #F1F3F8; }
+    .when { font-size: 12px; font-weight: 700; fill: #B8A64A; letter-spacing: .5px; }
+    .h { font-size: 11px; font-weight: 800; fill: #6E7891; letter-spacing: 2px; }
+    .s { font-size: 14px; font-weight: 500; fill: #C3C9D6; }
+    .ch { font-size: 12.5px; font-weight: 700; fill: #15130A; }
+    .b { font-size: 15px; font-weight: 700; fill: #D7DBE5; }
+  </style>
+</defs>
+<rect width="1280" height="362" rx="22" fill="url(#bg)"/>
+<g transform="translate(28 28)"><rect width="293" height="236" rx="16" class="c"/>
+<circle cx="38" cy="40" r="22" fill="#FFD400"/><text x="38" y="48" text-anchor="middle" style="font-size:20px">✋</text>
+<text x="72" y="38" class="nm">Script</text><text x="72" y="57" class="when">faceless only</text>
+<text x="275" y="30" text-anchor="end" class="n">GATE 1</text>
+<text x="275" y="56" text-anchor="end" style="font-size:18px">✍️</text>
+<text x="20" y="98" class="h">YOU SEE</text>
+<text x="20" y="122" class="s">• two best hooks, scored</text><text x="20" y="144" class="s">• beat list · runtime</text>
+<text x="20" y="182" class="h">YOU DECIDE</text>
+<rect x="20" y="194" width="67.6" height="26" rx="13" fill="#FFD400"/><text x="53.8" y="211" text-anchor="middle" class="ch">hook 1</text>
+<rect x="95.6" y="194" width="67.6" height="26" rx="13" fill="#FFD400"/><text x="129.39999999999998" y="211" text-anchor="middle" class="ch">hook 2</text>
+<rect x="171.2" y="194" width="67.6" height="26" rx="13" fill="#FFD400"/><text x="205.0" y="211" text-anchor="middle" class="ch">change</text>
+</g>
+<g transform="translate(337 28)"><rect width="293" height="236" rx="16" class="c"/>
+<circle cx="38" cy="40" r="22" fill="#FFD400"/><text x="38" y="48" text-anchor="middle" style="font-size:20px">✋</text>
+<text x="72" y="38" class="nm">Cuts</text><text x="72" y="57" class="when">recorded only</text>
+<text x="275" y="30" text-anchor="end" class="n">GATE 2</text>
+<text x="275" y="56" text-anchor="end" style="font-size:18px">✂️</text>
+<text x="20" y="98" class="h">YOU SEE</text>
+<text x="20" y="122" class="s">• seconds removed, new runtime</text><text x="20" y="144" class="s">• five biggest cuts</text>
+<text x="20" y="182" class="h">YOU DECIDE</text>
+<rect x="20" y="194" width="75.19999999999999" height="26" rx="13" fill="#FFD400"/><text x="57.599999999999994" y="211" text-anchor="middle" class="ch">approve</text>
+<rect x="103.19999999999999" y="194" width="52.4" height="26" rx="13" fill="#FFD400"/><text x="129.39999999999998" y="211" text-anchor="middle" class="ch">keep</text>
+<rect x="163.6" y="194" width="82.8" height="26" rx="13" fill="#FFD400"/><text x="205.0" y="211" text-anchor="middle" class="ch">cut more</text>
+</g>
+<g transform="translate(646 28)"><rect width="293" height="236" rx="16" class="c"/>
+<circle cx="38" cy="40" r="22" fill="#FFD400"/><text x="38" y="48" text-anchor="middle" style="font-size:20px">✋</text>
+<text x="72" y="38" class="nm">Package</text><text x="72" y="57" class="when">every video</text>
+<text x="275" y="30" text-anchor="end" class="n">GATE 3</text>
+<text x="275" y="56" text-anchor="end" style="font-size:18px">🏷️</text>
+<text x="20" y="98" class="h">YOU SEE</text>
+<text x="20" y="122" class="s">• three title + thumbnail</text><text x="20" y="144" class="s">• pairings with scores</text>
+<text x="20" y="182" class="h">YOU DECIDE</text>
+<rect x="20" y="194" width="29.6" height="26" rx="13" fill="#FFD400"/><text x="34.8" y="211" text-anchor="middle" class="ch">1</text>
+<rect x="57.6" y="194" width="29.6" height="26" rx="13" fill="#FFD400"/><text x="72.4" y="211" text-anchor="middle" class="ch">2</text>
+<rect x="95.2" y="194" width="29.6" height="26" rx="13" fill="#FFD400"/><text x="110.0" y="211" text-anchor="middle" class="ch">3</text>
+<rect x="132.8" y="194" width="44.8" height="26" rx="13" fill="#FFD400"/><text x="155.20000000000002" y="211" text-anchor="middle" class="ch">new</text>
+</g>
+<g transform="translate(955 28)"><rect width="293" height="236" rx="16" class="c"/>
+<circle cx="38" cy="40" r="22" fill="#FFD400"/><text x="38" y="48" text-anchor="middle" style="font-size:20px">✋</text>
+<text x="72" y="38" class="nm">Publish</text><text x="72" y="57" class="when">every video</text>
+<text x="275" y="30" text-anchor="end" class="n">GATE 4</text>
+<text x="275" y="56" text-anchor="end" style="font-size:18px">🚀</text>
+<text x="20" y="98" class="h">YOU SEE</text>
+<text x="20" y="122" class="s">• every QA FAIL and WARN</text><text x="20" y="144" class="s">• final title · thumbnail</text>
+<text x="20" y="182" class="h">YOU DECIDE</text>
+<rect x="20" y="194" width="75.19999999999999" height="26" rx="13" fill="#FFD400"/><text x="57.599999999999994" y="211" text-anchor="middle" class="ch">private</text>
+<rect x="103.19999999999999" y="194" width="82.8" height="26" rx="13" fill="#FFD400"/><text x="144.6" y="211" text-anchor="middle" class="ch">unlisted</text>
+<rect x="194.0" y="194" width="82.8" height="26" rx="13" fill="#FFD400"/><text x="235.4" y="211" text-anchor="middle" class="ch">schedule</text>
+</g>
+<rect x="28" y="280" width="1224" height="54" rx="14" fill="#FF2E4D" fill-opacity=".08" stroke="#FF2E4D" stroke-opacity=".35"/>
+<text x="640.0" y="313" text-anchor="middle" class="b">🔒  A QA FAIL blocks upload   ·   uploads default to private   ·   any gate can be set to "auto"   ·   a rejection reruns only what it touches</text>
+</svg>

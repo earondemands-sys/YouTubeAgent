@@ -1,0 +1,181 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="616" viewBox="0 0 1280 616" role="img" aria-label="The 15 agents: Director, Research, Planner, Script, Voiceover, Editor, B-roll, Remotion, Shorts, Packaging, Thumbnail, SEO, QA, Publish, Analytics">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A0C12"/><stop offset="1" stop-color="#11101A"/></linearGradient>
+  <linearGradient id="lead" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D97757" stop-opacity=".28"/><stop offset="1" stop-color="#D97757" stop-opacity=".06"/></linearGradient>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .c { fill: #141824; stroke: #283044; }
+    .num { font-size: 13px; font-weight: 800; fill: #4C5570; }
+    .nm { font-size: 19px; font-weight: 800; fill: #F1F3F8; }
+    .d { font-size: 13.5px; font-weight: 500; fill: #9AA3B8; }
+    .tag { font-size: 11.5px; font-weight: 700; }
+  </style>
+</defs>
+<rect width="1280" height="616" rx="22" fill="url(#bg)"/>
+<g>
+<rect x="28" y="28" width="232" height="176" rx="16" class="c" style="fill:url(#lead);stroke:#D97757;stroke-opacity:.7"/>
+<rect x="46" y="28" width="44" height="3" rx="1.5" fill="#D97757"/>
+<circle cx="68" cy="74" r="22" fill="#D97757" fill-opacity=".14"/>
+<text x="68" y="82" text-anchor="middle" style="font-size:22px">🎬</text>
+<text x="242" y="58" text-anchor="end" class="num">01</text>
+<rect x="184" y="68" width="58" height="20" rx="10" fill="#D97757"/><text x="213" y="82" text-anchor="middle" class="tag" fill="#1A0F0A">LEADS</text>
+<text x="46" y="126" class="nm">Director</text>
+<text x="46" y="148" class="d">Runs the whole pipeline,</text>
+<text x="46" y="166" class="d">keeps state, asks you</text>
+<rect x="46" y="176" width="132" height="18" rx="9" fill="#D97757" fill-opacity=".12" stroke="#D97757" stroke-opacity=".35"/><text x="112.0" y="189" text-anchor="middle" class="tag" fill="#D97757">youtube-director</text>
+</g>
+<g>
+<rect x="276" y="28" width="232" height="176" rx="16" class="c"/>
+<rect x="294" y="28" width="44" height="3" rx="1.5" fill="#FF7A45"/>
+<circle cx="316" cy="74" r="22" fill="#FF7A45" fill-opacity=".14"/>
+<text x="316" y="82" text-anchor="middle" style="font-size:22px">🔭</text>
+<text x="490" y="58" text-anchor="end" class="num">02</text>
+<text x="294" y="126" class="nm">Research</text>
+<text x="294" y="148" class="d">What beats its own</text>
+<text x="294" y="166" class="d">channel on this topic</text>
+<rect x="294" y="176" width="76" height="18" rx="9" fill="#FF7A45" fill-opacity=".12" stroke="#FF7A45" stroke-opacity=".35"/><text x="332.0" y="189" text-anchor="middle" class="tag" fill="#FF7A45">yt-viral</text>
+</g>
+<g>
+<rect x="524" y="28" width="232" height="176" rx="16" class="c"/>
+<rect x="542" y="28" width="44" height="3" rx="1.5" fill="#A78BFA"/>
+<circle cx="564" cy="74" r="22" fill="#A78BFA" fill-opacity=".14"/>
+<text x="564" y="82" text-anchor="middle" style="font-size:22px">🗓️</text>
+<text x="738" y="58" text-anchor="end" class="num">03</text>
+<text x="542" y="126" class="nm">Planner</text>
+<text x="542" y="148" class="d">Week or month of uploads</text>
+<text x="542" y="166" class="d">sized to your real hours</text>
+<rect x="542" y="176" width="69" height="18" rx="9" fill="#A78BFA" fill-opacity=".12" stroke="#A78BFA" stroke-opacity=".35"/><text x="576.5" y="189" text-anchor="middle" class="tag" fill="#A78BFA">yt-plan</text>
+</g>
+<g>
+<rect x="772" y="28" width="232" height="176" rx="16" class="c"/>
+<rect x="790" y="28" width="44" height="3" rx="1.5" fill="#FF7A45"/>
+<circle cx="812" cy="74" r="22" fill="#FF7A45" fill-opacity=".14"/>
+<text x="812" y="82" text-anchor="middle" style="font-size:22px">✍️</text>
+<text x="986" y="58" text-anchor="end" class="num">04</text>
+<text x="790" y="126" class="nm">Script</text>
+<text x="790" y="148" class="d">5 hooks scored on 21</text>
+<text x="790" y="166" class="d">formulas, full script</text>
+<rect x="790" y="176" width="83" height="18" rx="9" fill="#FF7A45" fill-opacity=".12" stroke="#FF7A45" stroke-opacity=".35"/><text x="831.5" y="189" text-anchor="middle" class="tag" fill="#FF7A45">yt-script</text>
+</g>
+<g>
+<rect x="1020" y="28" width="232" height="176" rx="16" class="c"/>
+<rect x="1038" y="28" width="44" height="3" rx="1.5" fill="#FFD400"/>
+<circle cx="1060" cy="74" r="22" fill="#FFD400" fill-opacity=".14"/>
+<text x="1060" y="82" text-anchor="middle" style="font-size:22px">🗣️</text>
+<text x="1234" y="58" text-anchor="end" class="num">05</text>
+<text x="1038" y="126" class="nm">Voiceover</text>
+<text x="1038" y="148" class="d">Voice per beat with</text>
+<text x="1038" y="166" class="d">word-level timings</text>
+<rect x="1038" y="176" width="90" height="18" rx="9" fill="#FFD400" fill-opacity=".12" stroke="#FFD400" stroke-opacity=".35"/><text x="1083.0" y="189" text-anchor="middle" class="tag" fill="#FFD400">ElevenLabs</text>
+</g>
+<g>
+<rect x="28" y="220" width="232" height="176" rx="16" class="c"/>
+<rect x="46" y="220" width="44" height="3" rx="1.5" fill="#FF7A45"/>
+<circle cx="68" cy="266" r="22" fill="#FF7A45" fill-opacity=".14"/>
+<text x="68" y="274" text-anchor="middle" style="font-size:22px">✂️</text>
+<text x="242" y="250" text-anchor="end" class="num">06</text>
+<text x="46" y="318" class="nm">Editor</text>
+<text x="46" y="340" class="d">Transcript, dead air,</text>
+<text x="46" y="358" class="d">filler and retakes cut</text>
+<rect x="46" y="368" width="139" height="18" rx="9" fill="#FF7A45" fill-opacity=".12" stroke="#FF7A45" stroke-opacity=".35"/><text x="115.5" y="381" text-anchor="middle" class="tag" fill="#FF7A45">yt-edit · Whisper</text>
+</g>
+<g>
+<rect x="276" y="220" width="232" height="176" rx="16" class="c"/>
+<rect x="294" y="220" width="44" height="3" rx="1.5" fill="#FFD400"/>
+<circle cx="316" cy="266" r="22" fill="#FFD400" fill-opacity=".14"/>
+<text x="316" y="274" text-anchor="middle" style="font-size:22px">🎞️</text>
+<text x="490" y="250" text-anchor="end" class="num">07</text>
+<text x="294" y="318" class="nm">B-roll</text>
+<text x="294" y="340" class="d">A visual for every beat,</text>
+<text x="294" y="358" class="d">exact credits kept</text>
+<rect x="294" y="368" width="146" height="18" rx="9" fill="#FFD400" fill-opacity=".12" stroke="#FFD400" stroke-opacity=".35"/><text x="367.0" y="381" text-anchor="middle" class="tag" fill="#FFD400">Pexels · AI images</text>
+</g>
+<g>
+<rect x="524" y="220" width="232" height="176" rx="16" class="c"/>
+<rect x="542" y="220" width="44" height="3" rx="1.5" fill="#FFD400"/>
+<circle cx="564" cy="266" r="22" fill="#FFD400" fill-opacity=".14"/>
+<text x="564" y="274" text-anchor="middle" style="font-size:22px">🎨</text>
+<text x="738" y="250" text-anchor="end" class="num">08</text>
+<text x="542" y="318" class="nm">Remotion</text>
+<text x="542" y="340" class="d">Renders the video in</text>
+<text x="542" y="358" class="d">one of 10 styles</text>
+<rect x="542" y="368" width="90" height="18" rx="9" fill="#FFD400" fill-opacity=".12" stroke="#FFD400" stroke-opacity=".35"/><text x="587.0" y="381" text-anchor="middle" class="tag" fill="#FFD400">Remotion 4</text>
+</g>
+<g>
+<rect x="772" y="220" width="232" height="176" rx="16" class="c"/>
+<rect x="790" y="220" width="44" height="3" rx="1.5" fill="#7CDB6A"/>
+<circle cx="812" cy="266" r="22" fill="#7CDB6A" fill-opacity=".14"/>
+<text x="812" y="274" text-anchor="middle" style="font-size:22px">📱</text>
+<text x="986" y="250" text-anchor="end" class="num">09</text>
+<text x="790" y="318" class="nm">Shorts</text>
+<text x="790" y="340" class="d">Stand-alone moments,</text>
+<text x="790" y="358" class="d">vertical, own captions</text>
+<rect x="790" y="368" width="83" height="18" rx="9" fill="#7CDB6A" fill-opacity=".12" stroke="#7CDB6A" stroke-opacity=".35"/><text x="831.5" y="381" text-anchor="middle" class="tag" fill="#7CDB6A">yt-shorts</text>
+</g>
+<g>
+<rect x="1020" y="220" width="232" height="176" rx="16" class="c"/>
+<rect x="1038" y="220" width="44" height="3" rx="1.5" fill="#7CDB6A"/>
+<circle cx="1060" cy="266" r="22" fill="#7CDB6A" fill-opacity=".14"/>
+<text x="1060" y="274" text-anchor="middle" style="font-size:22px">🏷️</text>
+<text x="1234" y="250" text-anchor="end" class="num">10</text>
+<text x="1038" y="318" class="nm">Packaging</text>
+<text x="1038" y="340" class="d">10 title + thumbnail</text>
+<text x="1038" y="358" class="d">pairings, linted, top 3</text>
+<rect x="1038" y="368" width="90" height="18" rx="9" fill="#7CDB6A" fill-opacity=".12" stroke="#7CDB6A" stroke-opacity=".35"/><text x="1083.0" y="381" text-anchor="middle" class="tag" fill="#7CDB6A">yt-package</text>
+</g>
+<g>
+<rect x="28" y="412" width="232" height="176" rx="16" class="c"/>
+<rect x="46" y="412" width="44" height="3" rx="1.5" fill="#7CDB6A"/>
+<circle cx="68" cy="458" r="22" fill="#7CDB6A" fill-opacity=".14"/>
+<text x="68" y="466" text-anchor="middle" style="font-size:22px">🖼️</text>
+<text x="242" y="442" text-anchor="end" class="num">11</text>
+<text x="46" y="510" class="nm">Thumbnail</text>
+<text x="46" y="532" class="d">Face + 3 words, checked</text>
+<text x="46" y="550" class="d">at feed size, &lt; 2 MB</text>
+<rect x="46" y="560" width="118" height="18" rx="9" fill="#7CDB6A" fill-opacity=".12" stroke="#7CDB6A" stroke-opacity=".35"/><text x="105.0" y="573" text-anchor="middle" class="tag" fill="#7CDB6A">Remotion still</text>
+</g>
+<g>
+<rect x="276" y="412" width="232" height="176" rx="16" class="c"/>
+<rect x="294" y="412" width="44" height="3" rx="1.5" fill="#7CDB6A"/>
+<circle cx="316" cy="458" r="22" fill="#7CDB6A" fill-opacity=".14"/>
+<text x="316" y="466" text-anchor="middle" style="font-size:22px">🔎</text>
+<text x="490" y="442" text-anchor="end" class="num">12</text>
+<text x="294" y="510" class="nm">SEO</text>
+<text x="294" y="532" class="d">Description, tags and</text>
+<text x="294" y="550" class="d">chapters that render</text>
+<rect x="294" y="560" width="160" height="18" rx="9" fill="#7CDB6A" fill-opacity=".12" stroke="#7CDB6A" stroke-opacity=".35"/><text x="374.0" y="573" text-anchor="middle" class="tag" fill="#7CDB6A">yt-seo · yt-chapters</text>
+</g>
+<g>
+<rect x="524" y="412" width="232" height="176" rx="16" class="c"/>
+<rect x="542" y="412" width="44" height="3" rx="1.5" fill="#22D3EE"/>
+<circle cx="564" cy="458" r="22" fill="#22D3EE" fill-opacity=".14"/>
+<text x="564" y="466" text-anchor="middle" style="font-size:22px">✅</text>
+<text x="738" y="442" text-anchor="end" class="num">13</text>
+<text x="542" y="510" class="nm">QA</text>
+<text x="542" y="532" class="d">11 checks, each with</text>
+<text x="542" y="550" class="d">the agent that fixes it</text>
+<rect x="542" y="560" width="64" height="18" rx="9" fill="#22D3EE" fill-opacity=".12" stroke="#22D3EE" stroke-opacity=".35"/><text x="574.0" y="573" text-anchor="middle" class="tag" fill="#22D3EE">ffmpeg</text>
+</g>
+<g>
+<rect x="772" y="412" width="232" height="176" rx="16" class="c"/>
+<rect x="790" y="412" width="44" height="3" rx="1.5" fill="#22D3EE"/>
+<circle cx="812" cy="458" r="22" fill="#22D3EE" fill-opacity=".14"/>
+<text x="812" y="466" text-anchor="middle" style="font-size:22px">🚀</text>
+<text x="986" y="442" text-anchor="end" class="num">14</text>
+<text x="790" y="510" class="nm">Publish</text>
+<text x="790" y="532" class="d">Upload, thumbnail,</text>
+<text x="790" y="550" class="d">schedule, quota-aware</text>
+<rect x="790" y="560" width="132" height="18" rx="9" fill="#22D3EE" fill-opacity=".12" stroke="#22D3EE" stroke-opacity=".35"/><text x="856.0" y="573" text-anchor="middle" class="tag" fill="#22D3EE">YouTube Data API</text>
+</g>
+<g>
+<rect x="1020" y="412" width="232" height="176" rx="16" class="c"/>
+<rect x="1038" y="412" width="44" height="3" rx="1.5" fill="#A78BFA"/>
+<circle cx="1060" cy="458" r="22" fill="#A78BFA" fill-opacity=".14"/>
+<text x="1060" y="466" text-anchor="middle" style="font-size:22px">📈</text>
+<text x="1234" y="442" text-anchor="end" class="num">15</text>
+<text x="1038" y="510" class="nm">Analytics</text>
+<text x="1038" y="532" class="d">Retention leak, comment</text>
+<text x="1038" y="550" class="d">drafts, next ideas</text>
+<rect x="1038" y="560" width="195" height="18" rx="9" fill="#A78BFA" fill-opacity=".12" stroke="#A78BFA" stroke-opacity=".35"/><text x="1135.5" y="573" text-anchor="middle" class="tag" fill="#A78BFA">yt-retention · yt-comment</text>
+</g>
+</svg>

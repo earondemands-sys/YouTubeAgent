@@ -1,0 +1,67 @@
+{
+  "channel": {
+    "name": "EarOnDemands",
+    "handle": "",
+    "niche": "ServiceNow training in Telugu (ITSM, scripting, integrations, career)",
+    "audience": "Freshers and non-IT switchers who want a good IT package; secondary: working ServiceNow devs wanting depth",
+    "language": "te-en (Tenglish: Telugu in Roman script, tech terms in English)",
+    "timezone": "",
+    "upload_days": [],
+    "upload_time": ""
+  },
+  "gates": {
+    "script": "ask",
+    "cuts": "ask",
+    "package": "ask",
+    "publish": "ask"
+  },
+  "defaults": {
+    "recorded_style": "tech-explainer",
+    "faceless_style": "storytime",
+    "privacy": "private",
+    "category_id": "27",
+    "made_for_kids": false,
+    "synthetic_media_disclosure": "auto",
+    "shorts_per_video": 3,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "faceless_length_min": 8
+  },
+  "brand": {
+    "primary": "#FFD400",
+    "secondary": "#111111",
+    "accent": "#FF3B30",
+    "text": "#FFFFFF",
+    "font_heading": "Montserrat",
+    "font_body": "Inter",
+    "logo": "assets/brand/logo.png",
+    "faces_dir": "assets/brand/faces"
+  },
+  "voiceover": {
+    "provider": "elevenlabs",
+    "voice_id": "",
+    "model": ""
+  },
+  "images": {
+    "provider": "",
+    "model": ""
+  },
+  "broll": {
+    "provider": "pexels"
+  },
+  "music": {
+    "dir": "assets/music",
+    "volume": 0.12,
+    "duck_under_voice": true
+  },
+  "analytics_delay_hours": 48,
+  "transcribe": {
+    "model": "turbo",
+    "language": "te",
+    "caption_script": "roman"
+  },
+  "sfx": {
+    "dir": "assets/sfx"
+  }
+}
