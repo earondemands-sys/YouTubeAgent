@@ -3,13 +3,26 @@
 
     python3 scripts/thumbnail.py projects/<slug> --option 1 [--variant 1] [--bg ai|gradient|<file>]
                                  [--face auto|none|<file>] [--text "OVERRIDE"] [--layout face-right]
+                                 [--scale 3] [--badge "LABEL"] [--one-line] [--bg-color "#0B1530"]
+                                 [--glow "#22C55E"] [--backdrop ui] [--face-height 180 --face-top 2]
 
 --option N     the option in work/package.json (its thumb_text and brief.image_prompt)
 --bg ai        generate the background with scripts/imagegen.py (needs an image key); `gradient`
                uses the brand colours; a path uses that image. Default: ai if a key is set, else gradient.
+--layout       face-right | face-left | no-face | headline-chips (default: the option's
+               thumb_design.layout, else face-right/no-face).
+--no-design    ignore the option's thumb_design (package.json) - its extra props and variant overrides.
 --face auto    the first PNG in config brand.faces_dir (sorted); `none` for a faceless thumbnail.
 
-Writes work/thumb/thumb-<option>-<variant>.jpg (1280x720, under 2MB) and a preview of it beside
+--scale 3      render the 1280x720 design at 3x (3840x2160); JPEG quality drops until it is under 2MB.
+--badge        a short label pill under the words (Telugu script works).
+--one-line     the words on one line instead of stacked.
+--bg-color / --glow / --backdrop ui   gradient-mode background: base colour, a soft glow behind the
+               face, blurred abstract dashboard panels behind the words.
+--face-height / --face-top / --face-inset   size (% of height; >100 crops, e.g. waist-up from a
+               full-body cutout), top anchor (%) and side offset (px) of the face image.
+
+Writes work/thumb/thumb-<option>-<variant>.jpg (1280x720 x scale, under 2MB) and a preview of it beside
 itself at feed size (168x94), so the agent can check it still reads small.
 """
 import argparse, json, os, subprocess, sys
@@ -40,6 +53,16 @@ def main():
     p.add_argument("--face", default="auto")
     p.add_argument("--text")
     p.add_argument("--layout")
+    p.add_argument("--scale", type=float, default=1)
+    p.add_argument("--badge")
+    p.add_argument("--one-line", action="store_true")
+    p.add_argument("--bg-color")
+    p.add_argument("--glow")
+    p.add_argument("--backdrop", choices=["none", "ui"])
+    p.add_argument("--face-height", type=float)
+    p.add_argument("--face-top", type=float)
+    p.add_argument("--face-inset", type=float)
+    p.add_argument("--no-design", action="store_true")
     a = p.parse_args()
     pdir = os.path.abspath(a.project)
     cfg = json.load(open(CONFIG)) if os.path.exists(CONFIG) else {}
@@ -80,16 +103,25 @@ def main():
     elif a.face != "none":
         face = link(pdir, a.face, f"face-{tag}.png")
 
-    layout = a.layout or ("face-right" if face else "no-face")
+    # option.thumb_design (package.json): extra Thumbnail props, e.g. a whole 'headline-chips' design,
+    # with per-variant overrides under "variants": {"1": {...}, "2": {...}}. CLI flags win.
+    design = {} if a.no_design else dict(opt.get("thumb_design") or {})
+    design.update((design.pop("variants", None) or {}).get(str(a.variant), {}))
+    layout = a.layout or design.pop("layout", None) or ("face-right" if face else "no-face")
+    design.pop("layout", None)
     brand = cfg.get("brand", {})
     props = {"background": background, "face": face, "text": a.text or opt["thumb_text"], "layout": layout,
              "brand": {k: brand.get(k) for k in ("primary", "secondary", "accent", "text", "font_heading", "font_body")}}
+    props.update({k: v for k, v in design.items() if k not in props and not k.startswith("_")})
+    extra = {"badge": a.badge, "oneLine": a.one_line or None, "bgColor": a.bg_color, "glowColor": a.glow,
+             "backdrop": a.backdrop, "faceHeight": a.face_height, "faceTop": a.face_top, "faceInset": a.face_inset}
+    props.update({k: v for k, v in extra.items() if v is not None})
     props_path = os.path.join(pdir, "work", "thumb", f"thumb-{tag}.props.json")
     json.dump(props, open(props_path, "w"), ensure_ascii=False)
 
     out = os.path.join("work", "thumb", f"thumb-{tag}.jpg")
     r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "render.py"), pdir, "--thumbnail", props_path,
-                        "--out", out], capture_output=True, text=True)
+                        "--out", out, "--scale", f"{a.scale:g}"], capture_output=True, text=True)
     if r.returncode != 0:
         sys.exit(r.stderr.strip() or r.stdout.strip())
     preview = os.path.join("work", "thumb", f"preview-{tag}.jpg")

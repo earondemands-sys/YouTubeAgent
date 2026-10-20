@@ -78,13 +78,46 @@ export type MainProps = {
   assetBase?: string;
 };
 
+// --- 'headline-chips' layout: kicker pill, headline line, tilted highlight box, chip row, tags ---
+export type ThumbIcon = 'code' | 'check' | 'none';
+export type KickerPart = {text: string; kind?: 'wordmark' | 'caps' | 'highlight'; color?: string};
+export type HeadlinePart = {text: string; color?: string};
+export type ThumbHighlight = {text: string; color?: string; colorTo?: string; textColor?: string; rotate?: number};
+export type ThumbChip = {text: string; color: string; textColor?: string; icon?: ThumbIcon; rotate?: number};
+export type ThumbCard = {title: string; subtitle: string; icon?: ThumbIcon; iconColor?: string; rotate?: number};
+export type ThumbTag = {text: string; color: string; textColor?: string};
+
 export type ThumbnailProps = {
   background: string | null;
   face: string | null;
   text: string;
-  layout: 'face-right' | 'face-left' | 'no-face';
+  layout: 'face-right' | 'face-left' | 'no-face' | 'headline-chips';
   brand: Brand;
   textColor?: string;
   highlightWord?: number;
+  // all optional; leaving them out gives the original look
+  oneLine?: boolean; // the words on one line instead of stacked
+  badge?: string; // a short label pill under the words (any script; fontStack covers Telugu)
+  badgeColor?: string; // pill fill, default brand.primary
+  badgeTextColor?: string; // default #000
+  bgColor?: string; // solid base colour for the gradient background, default brand.secondary
+  glowColor?: string; // soft radial glow behind the face
+  backdrop?: 'none' | 'ui'; // 'ui': blurred abstract dashboard panels behind the words
+  backdropOpacity?: number; // 0-1, default 0.18
+  faceHeight?: number; // face image height, % of the canvas height (default 96); >100 crops it
+  faceTop?: number; // when set, anchor the face image this % from the top instead of the bottom
+  faceInset?: number; // px from the side edge, default 20 (negative pushes it off-canvas)
+  // 'headline-chips' only (text is the fallback headline when `headline` is absent)
+  kicker?: KickerPart[]; // white pill top-left, e.g. a plain-text brand word + "CAREER 2026"
+  headline?: HeadlinePart[]; // one big line, each part its own colour
+  highlight?: ThumbHighlight; // the tilted box under the headline
+  chips?: ThumbChip[];
+  card?: ThumbCard; // small white ticket-style card at the end of the chip row
+  tags?: ThumbTag[];
+  headingFont?: string; // overrides brand.font_heading for this layout
+  headlineSize?: number; // px at 1280x720, default 150
+  highlightSize?: number; // px, default 190
+  bgEdge?: string; // left-edge colour of the background gradient (bgColor = middle, glowColor = right)
+  rays?: boolean; // faint sunburst behind the presenter, default true
   assetBase?: string;
 };

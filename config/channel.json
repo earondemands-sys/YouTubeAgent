@@ -63,5 +63,30 @@
   },
   "sfx": {
     "dir": "assets/sfx"
+  },
+  "platforms": {
+    "default": "ask"
+  },
+  "instagram": {
+    "handle": "",
+    "api_version": "v23.0",
+    "share_to_feed": true,
+    "hashtags": 5,
+    "default_post": "ask",
+    "trending_audio": "manual"
+  },
+  "engage": {
+    "mode": "ask",
+    "platforms": [
+      "youtube",
+      "instagram"
+    ],
+    "lookback_days": 14,
+    "instagram_posts": 25,
+    "max_replies_per_run": 25,
+    "delay_seconds": [
+      8,
+      20
+    ]
   }
 }

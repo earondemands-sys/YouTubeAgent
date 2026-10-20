@@ -159,6 +159,81 @@ class TestPipeline(unittest.TestCase):
         e.run("gate", "g", "gate:cuts", "reject", ok=False)                     # needs a note
         e.run("brief", "g", "gate:cuts", ok=False)
 
+    def test_both_platforms_runs_reels_and_ig_publish(self):
+        e = Engine(delay=0)
+        out = e.run("new", "b", "--mode", "recorded", "--source", e.source, "--platforms", "both")
+        self.assertEqual(out["platforms"], ["youtube", "instagram"])
+        rounds, nx = e.drive("b")
+        self.assertTrue(nx["complete"])
+        self.assertEqual(rounds[3], ["reels", "seo", "thumbnail"])    # captions while SEO and thumbnail run
+        self.assertEqual(rounds[4], ["qa"])                            # QA sees the Reels
+        self.assertEqual(rounds[5], ["ig-publish", "publish"])        # both platforms post in parallel
+
+    def test_instagram_only_skips_youtube_publish_and_analytics(self):
+        e = Engine(delay=0)
+        e.run("new", "i", "--mode", "faceless", "--topic", "x", "--platforms", "instagram")
+        rounds, nx = e.drive("i")
+        self.assertTrue(nx["complete"])
+        flat = [s for r in rounds for s in r]
+        self.assertNotIn("publish", flat)
+        self.assertNotIn("analytics", flat)
+        self.assertIn("ig-publish", flat)
+
+    def test_youtube_default_keeps_instagram_out(self):
+        e = Engine(delay=0)
+        e.run("new", "y", "--mode", "recorded", "--source", e.source)
+        rounds, _ = e.drive("y")
+        flat = [s for r in rounds for s in r]
+        self.assertNotIn("reels", flat)
+        self.assertNotIn("ig-publish", flat)
+
+    def test_platforms_ask_and_guards(self):
+        e = Engine()
+        with open(e.config) as f:
+            cfg = json.load(f)
+        cfg["platforms"] = {"default": "ask"}
+        with open(e.config, "w") as f:
+            json.dump(cfg, f)
+        self.assertIn("--platforms", e.run("new", "a", "--mode", "recorded", "--source", e.source, ok=False))
+        e.run("new", "a", "--mode", "recorded", "--source", e.source, "--platforms", "tiktok", ok=False)
+        e.run("new", "a", "--mode", "recorded", "--source", e.source, "--platforms", "instagram",
+              "--skip", "shorts", ok=False)                             # Reels are the Shorts
+
+    def test_platforms_command_adds_instagram_later(self):
+        e = Engine(gates={"cuts": "auto", "package": "auto"}, delay=0)
+        e.run("new", "l", "--mode", "recorded", "--source", e.source, "--platforms", "youtube")
+        for _ in range(10):
+            nx = e.run("next", "l")
+            if nx["gates"]:
+                break
+            for s in nx["run"]:
+                e.fake_agent("l", s)
+        out = e.run("platforms", "l", "both")                          # changed their mind at the gate
+        self.assertIn("reels: pending", out["changed"])
+        e.run("gate", "l", "gate:publish", "approve", "--note", "privacy=private ig=now")
+        rounds, nx = e.drive("l")
+        self.assertTrue(nx["complete"])
+        flat = [s for r in rounds for s in r]
+        self.assertLess(flat.index("reels"), flat.index("ig-publish"))
+        out = e.run("platforms", "l", "instagram")
+        self.assertTrue(any("publish is already done" in k for k in out["already_ran"]))
+
+    def test_old_project_loads_with_new_steps_skipped(self):
+        e = Engine()
+        e.run("new", "o", "--mode", "recorded", "--source", e.source)
+        path = os.path.join(e.projects, "o", "state.json")
+        with open(path) as f:
+            st = json.load(f)
+        for k in ("reels", "ig-publish"):
+            del st["steps"][k]
+        del st["inputs"]["platforms"]
+        with open(path, "w") as f:
+            json.dump(st, f)
+        st = e.run("status", "o", "--json")
+        self.assertEqual(st["steps"]["reels"]["status"], "skipped")
+        self.assertEqual(st["inputs"]["platforms"], ["youtube"])
+        self.assertEqual(e.run("next", "o")["run"], ["editor"])
+
     def test_done_reports_missing_files(self):
         e = Engine()
         e.run("new", "m", "--mode", "recorded", "--source", e.source)

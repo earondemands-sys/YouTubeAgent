@@ -3,6 +3,8 @@
 
     python3 scripts/pipeline.py new my-video --mode recorded --source ~/Movies/raw.mp4 --style hormozi
     python3 scripts/pipeline.py new my-video --mode faceless --topic "iPhone 18 leaks" --length 10
+    python3 scripts/pipeline.py new my-video ... --platforms youtube,instagram   # where it goes
+    python3 scripts/pipeline.py platforms my-video instagram   # change where it goes, before publish
     python3 scripts/pipeline.py next my-video            # what can run now, what needs the user
     python3 scripts/pipeline.py brief my-video editor    # the JSON brief handed to an agent
     python3 scripts/pipeline.py start my-video editor
@@ -24,6 +26,10 @@ report back; they never touch the state, so agents running in parallel cannot ra
 Steps are run by agents. Gates (gate:*) are decided by the user, unless config/channel.json marks
 that gate "auto". A step that needs the user is "blocked" with a question; answering it puts the
 step back to pending with the answer recorded, so the next run of the agent sees it.
+
+Platforms: a video goes to YouTube, Instagram or both. Each platform owns some steps
+(PLATFORM_STEPS); the steps of a platform the video is not going to are "skipped". Instagram posts
+the Shorts as Reels, so it needs the shorts step.
 """
 import argparse, datetime as dt, json, os, re, sys, tempfile
 
@@ -44,9 +50,11 @@ PIPELINES = {
         ("thumbnail", ["gate:package"]),
         ("shorts", ["remotion"]),
         ("seo", ["remotion", "gate:package"]),
-        ("qa", ["thumbnail", "shorts", "seo"]),
+        ("reels", ["shorts"]),
+        ("qa", ["thumbnail", "shorts", "seo", "reels"]),
         ("gate:publish", ["qa"]),
         ("publish", ["gate:publish"]),
+        ("ig-publish", ["gate:publish", "reels"]),
         ("analytics", ["publish"]),
     ],
     "faceless": [
@@ -61,15 +69,19 @@ PIPELINES = {
         ("thumbnail", ["gate:package"]),
         ("shorts", ["remotion"]),
         ("seo", ["remotion", "gate:package"]),
-        ("qa", ["thumbnail", "shorts", "seo"]),
+        ("reels", ["shorts"]),
+        ("qa", ["thumbnail", "shorts", "seo", "reels"]),
         ("gate:publish", ["qa"]),
         ("publish", ["gate:publish"]),
+        ("ig-publish", ["gate:publish", "reels"]),
         ("analytics", ["publish"]),
     ],
 }
 GATE_FEEDS = {"gate:cuts": "editor", "gate:script": "script", "gate:package": "packaging", "gate:publish": "qa"}
 GATE_KEYS = {"gate:cuts": "cuts", "gate:script": "script", "gate:package": "package", "gate:publish": "publish"}
 DELAYED = {"analytics": "analytics_delay_hours"}  # step -> config key holding its delay
+PLATFORM_STEPS = {"youtube": ["publish", "analytics"], "instagram": ["reels", "ig-publish"]}
+PLATFORMS = list(PLATFORM_STEPS)
 SUBDIRS = ["raw", "work", "out", "out/shorts"]
 SATISFIED = ("done", "skipped", "approved")
 
@@ -108,9 +120,35 @@ def pdir(slug):
 def load(slug):
     try:
         with open(os.path.join(pdir(slug), "state.json")) as f:
-            return json.load(f)
+            return migrate(json.load(f))
     except FileNotFoundError:
         die(f"no project '{slug}' in {PROJECTS}")
+
+
+def migrate(st):
+    """Projects made before a step existed get it as skipped, and go to YouTube only."""
+    st["inputs"].setdefault("platforms", ["youtube"])
+    for n, _ in PIPELINES[st["mode"]]:
+        if is_gate(n):
+            st["gates"].setdefault(n, {"status": "pending", "note": None})
+        elif n not in st["steps"]:
+            st["steps"][n] = {"status": "skipped", "outputs": {}, "attempts": 0, "answers": [], "feedback": []}
+    return st
+
+
+def parse_platforms(raw):
+    raw = (raw or "").strip().lower().replace(" ", "")
+    if raw in ("both", "all"):
+        return list(PLATFORMS)
+    got = [p for p in raw.split(",") if p]
+    bad = [p for p in got if p not in PLATFORMS]
+    if bad or not got:
+        die(f"platforms must be youtube, instagram, or both (got '{raw}')")
+    return [p for p in PLATFORMS if p in got]
+
+
+def platform_skips(platforms):
+    return [s for p, steps in PLATFORM_STEPS.items() if p not in platforms for s in steps]
 
 
 def save(st):
@@ -163,15 +201,19 @@ def downstream(st, name):
 
 
 def reset_nodes(st, names):
+    """Back to pending, except skipped steps. Returns the names actually reset."""
+    hit = []
     for n in names:
         x = node(st, n)
         if x["status"] == "skipped":
             continue
+        hit.append(n)
         if is_gate(n):
             x.update(status="pending", note=None)
         else:
             x.update(status="pending", outputs={}, question=None, options=[], reason=None)
             x.pop("not_before", None)
+    return hit
 
 
 def schedule_delayed(st, cfg):
@@ -222,24 +264,32 @@ def cmd_new(a):
 
     cfg = load_config()
     defaults = cfg.get("defaults", {})
+    default_platforms = cfg.get("platforms", {}).get("default", "youtube")
+    if not a.platforms and default_platforms == "ask":
+        die("config says ask where this video goes: pass --platforms youtube, instagram or both")
+    platforms = parse_platforms(a.platforms or default_platforms)
+    if "instagram" in platforms and "shorts" in skip:
+        die("Instagram posts the Shorts as Reels: do not skip shorts, or leave Instagram out")
     style = a.style or defaults.get(f"{a.mode}_style")
     st = {
         "slug": a.slug, "mode": a.mode, "created": iso(now()), "updated": None,
         "inputs": {"source": source, "topic": a.topic, "style": style, "length_min": a.length,
-                   "notes": a.notes},
+                   "notes": a.notes, "platforms": platforms, "skip": skip},
         "steps": {}, "gates": {}, "log": [],
     }
+    off = skip + platform_skips(platforms)
     for n in names:
         if is_gate(n):
             st["gates"][n] = {"status": "skipped" if GATE_FEEDS[n] in skip else "pending", "note": None}
         else:
-            st["steps"][n] = {"status": "skipped" if n in skip else "pending", "outputs": {},
+            st["steps"][n] = {"status": "skipped" if n in off else "pending", "outputs": {},
                               "attempts": 0, "answers": [], "feedback": []}
     for d in SUBDIRS:
         os.makedirs(os.path.join(pdir(a.slug), d), exist_ok=True)
-    log(st, "created", mode=a.mode, skip=skip)
+    log(st, "created", mode=a.mode, skip=skip, platforms=platforms)
     save(st)
-    emit({"created": a.slug, "dir": pdir(a.slug), "mode": a.mode, "style": style, "skipped": skip})
+    emit({"created": a.slug, "dir": pdir(a.slug), "mode": a.mode, "style": style, "skipped": skip,
+          "platforms": platforms})
 
 
 def cmd_next(a):
@@ -381,8 +431,7 @@ def cmd_retry(a):
 def cmd_reset(a):
     st = load(a.slug)
     node(st, a.step)
-    names = [a.step] + downstream(st, a.step)
-    reset_nodes(st, names)
+    names = reset_nodes(st, [a.step] + downstream(st, a.step))
     log(st, "reset", step=a.step, affected=names)
     save(st)
     emit({"reset": names})
@@ -407,11 +456,34 @@ def cmd_gate(a):
     if a.gate not in downstream(st, redo):
         die(f"'{redo}' does not feed {a.gate}")
     st["steps"][redo]["feedback"].append({"from": a.gate, "note": a.note, "at": iso(now())})
-    names = [redo] + downstream(st, redo)
-    reset_nodes(st, names)
+    names = reset_nodes(st, [redo] + downstream(st, redo))
     log(st, "rejected", gate=a.gate, redo=redo, note=a.note, affected=names)
     save(st)
     emit({"rejected": a.gate, "redo": redo, "reset": names})
+
+
+def cmd_platforms(a):
+    st = load(a.slug)
+    platforms = parse_platforms(a.platforms)
+    if "instagram" in platforms and st["steps"]["shorts"]["status"] == "skipped":
+        die("Instagram posts the Shorts as Reels, and this project skipped shorts")
+    user_skip = st["inputs"].get("skip") or []
+    changed, kept = [], []
+    for p, steps in PLATFORM_STEPS.items():
+        for name in steps:
+            n = st["steps"][name]
+            if p in platforms and n["status"] == "skipped" and name not in user_skip:
+                n.update(status="pending", outputs={}, question=None, options=[], reason=None)
+                changed.append(f"{name}: pending")
+            elif p not in platforms and n["status"] in ("pending", "blocked", "failed"):
+                n["status"] = "skipped"
+                changed.append(f"{name}: skipped")
+            elif p not in platforms and n["status"] in ("running", "done"):
+                kept.append(f"{name} is already {n['status']}")
+    st["inputs"]["platforms"] = platforms
+    log(st, "platforms", platforms=platforms, changed=changed)
+    save(st)
+    emit({"platforms": platforms, "changed": changed, "already_ran": kept})
 
 
 ICON = {"pending": "·", "running": "▶", "done": "✓", "blocked": "?", "failed": "✗",
@@ -423,7 +495,8 @@ def cmd_status(a):
     if a.json:
         emit(st)
         return
-    print(f"{st['slug']}  ({st['mode']}, style: {st['inputs'].get('style')})")
+    print(f"{st['slug']}  ({st['mode']}, style: {st['inputs'].get('style')}, "
+          f"to: {' + '.join(st['inputs'].get('platforms', ['youtube']))})")
     for name in graph(st):
         n = node(st, name)
         extra = ""
@@ -448,11 +521,12 @@ def cmd_list(a):
         if not os.path.exists(p):
             continue
         with open(p) as f:
-            st = json.load(f)
+            st = migrate(json.load(f))
         names = list(graph(st))
         done = sum(1 for n in names if satisfied(st, n))
         attention = [n for n in names if node(st, n)["status"] in ("blocked", "failed")]
-        rows.append({"slug": slug, "mode": st["mode"], "progress": f"{done}/{len(names)}",
+        rows.append({"slug": slug, "mode": st["mode"], "platforms": st["inputs"]["platforms"],
+                     "progress": f"{done}/{len(names)}",
                      "needs_attention": attention, "updated": st.get("updated")})
     emit(rows)
 
@@ -470,7 +544,13 @@ def main():
     s.add_argument("--length", type=float, help="target minutes (faceless)")
     s.add_argument("--notes")
     s.add_argument("--skip", help="comma-separated steps to skip, e.g. shorts,research")
+    s.add_argument("--platforms", help="youtube, instagram, or both (default: config platforms.default)")
     s.set_defaults(fn=cmd_new)
+
+    s = sub.add_parser("platforms")
+    s.add_argument("slug")
+    s.add_argument("platforms", help="youtube, instagram, or both")
+    s.set_defaults(fn=cmd_platforms)
 
     for name, fn in (("next", cmd_next), ("list", cmd_list)):
         s = sub.add_parser(name)

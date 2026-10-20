@@ -6,7 +6,8 @@
 
 Reads the outputs recorded in state.json (falls back to the standard paths), and checks the video,
 its loudness, black frames and silences, every Short, the thumbnail, the metadata limits YouTube
-enforces, chapter validity, b-roll credits and whether AI-media disclosure is needed.
+enforces, chapter validity, b-roll credits and whether AI-media disclosure is needed. When the
+video goes to Instagram, every Reel against Instagram's Reels limits too.
 
 Every check has an `owner`: the step that must fix it. The Director sends a rejection there.
 """
@@ -173,6 +174,67 @@ def check_shorts(rep, pdir, shorts_json):
                 "; ".join(bad + warn) or f"{w}x{h}, {dur:.0f}s", "shorts")
 
 
+# Instagram Reels through the API: 3 s to 15 min, 300 MB, H.264/HEVC + AAC, 23-60 fps, caption
+# 2200 characters, 30 hashtags, 20 @mentions. 9:16 is what fills the screen.
+REEL_MAX_BYTES = 300 * 1024 * 1024
+
+
+def check_reels(rep, pdir, reels_json):
+    if not reels_json or not os.path.exists(reels_json):
+        rep.add("reels", "FAIL", f"missing: {os.path.relpath(reels_json, pdir) if reels_json else 'work/reels.json'}", "reels")
+        return
+    reels = json.load(open(reels_json)).get("reels", [])
+    if not reels:
+        rep.add("reels", "FAIL", "reels.json has no reels", "reels")
+    for r in reels:
+        name = f"reel {r.get('n')}"
+        f = os.path.join(pdir, r.get("file", ""))
+        p = ffprobe(f) if r.get("file") and os.path.exists(f) else None
+        if not p or not streams(p, "video"):
+            rep.add(name, "FAIL", f"missing or unreadable: {r.get('file')}", "reels")
+            continue
+        v, a = streams(p, "video")[0], streams(p, "audio")
+        dur = float(p["format"].get("duration", 0))
+        w, h, fps = v.get("width", 0), v.get("height", 1), fps_of(v)
+        bad, warn = [], []
+        if not any(k in p["format"].get("format_name", "") for k in ("mp4", "mov")):
+            bad.append(f"container {p['format'].get('format_name')}, want mp4")
+        if v.get("codec_name") not in ("h264", "hevc"):
+            bad.append(f"video codec {v.get('codec_name')}, want h264")
+        if not a:
+            bad.append("no audio")
+        elif a[0].get("codec_name") != "aac":
+            bad.append(f"audio codec {a[0].get('codec_name')}, want aac")
+        if not 3 <= dur <= 900:
+            bad.append(f"{dur:.0f}s, Reels must be 3s-15min")
+        elif dur > 90:
+            warn.append(f"{dur:.0f}s - Reels over 90s are shown less")
+        if not 23 <= fps <= 60:
+            bad.append(f"{fps:.1f} fps, want 23-60")
+        if w > 1920:
+            bad.append(f"{w}px wide, max 1920")
+        if abs(w / h - 9 / 16) > 0.01:
+            warn.append(f"{w}x{h} is not 9:16 - black bars in the Reels feed")
+        if os.path.getsize(f) > REEL_MAX_BYTES:
+            bad.append(f"{os.path.getsize(f) / 1048576:.0f}MB, max 300MB")
+        cap = r.get("caption", "")
+        tags = re.findall(r"(?<!\w)#\w+", cap)
+        if not cap.strip():
+            bad.append("empty caption")
+        if len(cap) > 2200:
+            bad.append(f"caption {len(cap)} characters, max 2200")
+        if len(tags) > 30:
+            bad.append(f"{len(tags)} hashtags, max 30")
+        elif len(tags) > 8:
+            warn.append(f"{len(tags)} hashtags - 3-5 relevant ones work better")
+        if len(re.findall(r"(?<!\w)@\w+", cap)) > 20:
+            bad.append("over 20 @mentions")
+        if re.search(r"#shorts\b", cap, re.I):
+            warn.append("caption says #shorts - that is YouTube's tag")
+        rep.add(name, "FAIL" if bad else "WARN" if warn else "PASS",
+                "; ".join(bad + warn) or f"{w}x{h}, {dur:.0f}s, {len(cap)}-char caption, {len(tags)} hashtags", "reels")
+
+
 def check_thumbnail(rep, path):
     if not os.path.exists(path):
         rep.add("thumbnail", "FAIL", f"missing: {path}", "thumbnail")
@@ -285,6 +347,8 @@ def main():
         check_edges(rep, video, info["duration"])
     if state.get("steps", {}).get("shorts", {}).get("status") != "skipped":
         check_shorts(rep, pdir, out("shorts", "shorts", "work/shorts.json"))
+    if state.get("steps", {}).get("reels", {}).get("status") not in (None, "skipped"):
+        check_reels(rep, pdir, out("reels", "reels", "work/reels.json"))
     check_thumbnail(rep, out("thumbnail", "thumbnail", "out/thumbnail.jpg"))
     broll = out("broll", "broll", "work/broll.json") if state.get("mode") == "faceless" else None
     check_metadata(rep, out("seo", "metadata", "work/metadata.json"), info and info["duration"], broll)

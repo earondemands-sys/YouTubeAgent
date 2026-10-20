@@ -4,6 +4,7 @@
     python3 scripts/render.py projects/<slug>                     # long video -> out/video.mp4
     python3 scripts/render.py projects/<slug> --short 2           # work/shorts/short-2.props.json -> out/shorts/short-2.mp4
     python3 scripts/render.py projects/<slug> --thumbnail work/thumb/thumb-1.props.json --out out/thumbnail.jpg
+    ... --thumbnail ... --scale 3                                 # 1280x720 composition rendered at 3840x2160
     ... --frames 0-299                                            # render only part (a quick check)
 
 Assets are served to Remotion from the project folder by a local HTTP server for the length of the
@@ -85,9 +86,10 @@ def loudnorm(path, target=-14.0, tp=-1.5):
     return float(j["input_i"])
 
 
-def to_jpeg(png, out):
-    for q in range(2, 16):
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", png, "-vf", "scale=1280:720", "-q:v", str(q), out],
+def to_jpeg(png, out, scale=1):
+    w, h = round(1280 * scale), round(720 * scale)
+    for q in range(2, 32):
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", png, "-vf", f"scale={w}:{h}", "-q:v", str(q), out],
                        check=True)
         if os.path.getsize(out) < MAX_THUMB:
             return q, os.path.getsize(out)
@@ -101,6 +103,7 @@ def main():
     p.add_argument("--thumbnail", help="props JSON for the Thumbnail still")
     p.add_argument("--out")
     p.add_argument("--frames")
+    p.add_argument("--scale", type=float, default=1, help="thumbnail only: render the 1280x720 still at this multiple")
     a = p.parse_args()
     pdir = os.path.abspath(a.project)
     if not os.path.isdir(os.path.join(REMOTION, "node_modules")):
@@ -114,10 +117,12 @@ def main():
         out = os.path.join(pdir, a.out or "out/thumbnail.jpg")
         os.makedirs(os.path.dirname(out), exist_ok=True)
         png = os.path.splitext(out)[0] + ".png"
-        remotion(["still", "src/index.ts", "Thumbnail", png, f"--props={with_base(props, base)}", public])
-        q, size = to_jpeg(png, out)
+        remotion(["still", "src/index.ts", "Thumbnail", png, f"--props={with_base(props, base)}", public,
+                  f"--scale={a.scale:g}"])
+        q, size = to_jpeg(png, out, a.scale)
         os.remove(png)
-        print(json.dumps({"thumbnail": os.path.relpath(out, pdir), "bytes": size, "jpeg_q": q}))
+        print(json.dumps({"thumbnail": os.path.relpath(out, pdir), "bytes": size, "jpeg_q": q,
+                          "size": f"{round(1280 * a.scale)}x{round(720 * a.scale)}"}))
         return
 
     if a.short is not None:

@@ -6,11 +6,11 @@ import {loadFont as notoTelugu} from '@remotion/google-fonts/NotoSansTelugu';
 import {loadFont as oswald} from '@remotion/google-fonts/Oswald';
 import {loadFont as poppins} from '@remotion/google-fonts/Poppins';
 
-// Only the weights the designs use, so a render does not download every cut of every family.
+// latin-ext carries the rupee sign (U+20B9). Only the weights the designs use, so a render does not download every cut of every family.
 const LOADERS: Record<string, () => {fontFamily: string}> = {
-  Montserrat: () => montserrat('normal', {weights: ['600', '800', '900'], subsets: ['latin']}),
-  Inter: () => inter('normal', {weights: ['500', '700', '800'], subsets: ['latin']}),
-  Poppins: () => poppins('normal', {weights: ['600', '800', '900'], subsets: ['latin']}),
+  Montserrat: () => montserrat('normal', {weights: ['600', '800', '900'], subsets: ['latin', 'latin-ext']}),
+  Inter: () => inter('normal', {weights: ['500', '700', '800'], subsets: ['latin', 'latin-ext']}),
+  Poppins: () => poppins('normal', {weights: ['600', '700', '800', '900'], subsets: ['latin', 'latin-ext']}),
   Anton: () => anton('normal', {weights: ['400'], subsets: ['latin']}),
   'Bebas Neue': () => bebas('normal', {weights: ['400'], subsets: ['latin']}),
   Oswald: () => oswald('normal', {weights: ['600', '700'], subsets: ['latin']}),

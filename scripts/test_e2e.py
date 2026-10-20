@@ -62,6 +62,7 @@ def setup():
     cfg["gates"] = {k: "ask" for k in cfg["gates"]}
     cfg["analytics_delay_hours"] = 0
     cfg["images"] = {"provider": "", "model": ""}   # never call a paid API from a test
+    cfg["platforms"] = {"default": "youtube"}         # this test drives the YouTube path
     json.dump(cfg, open(ENV["YTA_CONFIG"], "w"), indent=2)
 
 

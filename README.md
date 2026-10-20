@@ -42,6 +42,8 @@
 | 🔎 **Writes the SEO** | Description, tags and chapters, validated against YouTube's rules (00:00 first, 3+ chapters, 10 s minimum) on the **edited** timeline. |
 | ✅ **QAs before upload** | Codec, loudness (−14 LUFS), black frames, silences, Shorts, thumbnail, title/description/tag limits, chapters, credits, AI disclosure. |
 | 🚀 **Uploads & schedules** | YouTube Data API: resumable upload, thumbnail, scheduling, `containsSyntheticMedia`, and a daily quota ledger that spreads Shorts across days. |
+| 📸 **Posts to Instagram too** | Pick YouTube, Instagram or both per video. The Shorts become Reels with their own caption, hashtags and cover frame, checked against Instagram's limits, posted now or queued for later. |
+| 💬 **Answers your comments** | Collects new comments on YouTube and Instagram, drafts replies in your voice from what the video actually says, hides spam, and posts after your yes (or on its own, if you set it to). Never answers anyone twice. |
 | 📈 **Learns afterwards** | Pulls retention and comments, names the single biggest leak, drafts replies (never posts them), and feeds ideas to the planner. |
 
 ## 🧭 The pipeline
@@ -203,6 +205,7 @@ python3 scripts/doctor.py
 `doctor.py` lists what is ready and what is missing, group by group.
 
 1. **YouTube sign-in:** follow [`docs/SETUP-YOUTUBE.md`](docs/SETUP-YOUTUBE.md) (about 20 min, one time).
+   **Instagram (optional):** follow [`docs/SETUP-INSTAGRAM.md`](docs/SETUP-INSTAGRAM.md) (about 15 min, one time).
 2. **Your channel:** edit [`config/channel.json`](config/channel.json), or let the Director ask you on the first run.
 3. **Your face:** put 3–5 transparent PNG cutouts in `assets/brand/faces/` for thumbnails.
 4. **Faceless videos (optional):** put `ELEVENLABS_API_KEY` and `PEXELS_API_KEY` in `.env` and set
@@ -218,12 +221,14 @@ Talk to Claude in plain words, in any language:
 "edit and upload this: ~/Movies/raw.mp4"
 "faceless video on ServiceNow interview questions, 10 minutes, listicle style"
 "plan my week"
+"post this one to YouTube and Instagram"
+"reply to my comments"
 "continue servicenow-ep5"
 "status"
 ```
 
 The first upload goes up **private**. Check it in YouTube Studio before you trust the team with
-public uploads.
+public uploads. Instagram has no private posts, so the Director always asks when the Reels go up.
 
 ## ⚙️ How it works
 

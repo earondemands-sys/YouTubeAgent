@@ -24,6 +24,7 @@ What `qa_check.py` checks:
 | Description | over 5000 characters, contains `<` or `>` |
 | Tags | total over 500 characters |
 | Chapters | not starting 00:00, fewer than 3, any under 10s, any past the video's end |
+| Reels (Instagram only) | not mp4/h264/aac, outside 3s-15min, outside 23-60 fps, over 300MB, caption empty or over 2200 chars, over 30 hashtags; WARN not 9:16, over 90s, over 8 hashtags, `#shorts` in the caption |
 
 What you add by looking:
 
@@ -38,6 +39,8 @@ What you add by looking:
   script shape and same voice with only the topic changed, WARN - YouTube's inauthentic-content
   policy can demonetise mass-produced channels.
 - **Credits**: every b-roll credit in `broll.json` appears in the description, else FAIL.
+- **Reel captions** (when `work/reels.json` exists): the first line must match what the Reel
+  actually says, and no caption may claim what the clip does not. Otherwise FAIL, owner `reels`.
 
 `work/qa-report.json`: `{"verdict": "PASS|WARN|FAIL", "synthetic_media": false, "checks": [{"name": "...", "status": "PASS|WARN|FAIL", "detail": "...", "owner": "remotion|thumbnail|seo|shorts|..."}]}`
 

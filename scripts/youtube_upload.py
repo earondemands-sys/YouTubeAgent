@@ -83,6 +83,7 @@ def short_description(meta):
 def upload(yt, path, body):
     from googleapiclient.errors import HttpError
     from googleapiclient.http import MediaFileUpload
+    from httplib2 import HttpLib2Error  # DNS / socket failures surface as these, not as OSError
     media = MediaFileUpload(path, chunksize=8 * 1024 * 1024, resumable=True, mimetype="video/mp4")
     req = yt.videos().insert(part="snippet,status", body=body, media_body=media)
     resp, tries = None, 0
@@ -98,9 +99,10 @@ def upload(yt, path, body):
             if tries > 8:
                 raise
             time.sleep(min(60, 2 ** tries + random.random()))
-        except (ConnectionError, TimeoutError, OSError):
+        except (ConnectionError, TimeoutError, OSError, HttpLib2Error):
+            # a home connection can drop for minutes; keep the resumable session alive that long
             tries += 1
-            if tries > 8:
+            if tries > 20:
                 raise
             time.sleep(min(60, 2 ** tries + random.random()))
     return resp
