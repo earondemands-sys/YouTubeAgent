@@ -6,7 +6,9 @@
     .venv/bin/python scripts/comments.py ledger                      # what has been answered so far
 
 `inbox` collects the comments that still need you: not yours, not already answered by you, not
-handled in an earlier run. It writes engage/inbox.json. The engage agent reads that, triages it the
+handled in an earlier run. A thread you already answered comes back when someone writes in it
+again after your reply: that item carries `parent_id` (the top-level comment the answer goes under,
+tagged @author) and `context` (the messages before it). It writes engage/inbox.json. The engage agent reads that, triages it the
 yt-comment way and writes engage/drafts.json:
 
   {"items": [{"key": "yt:Ugx...", "action": "reply|hide|skip|flag", "text": "...", "pile": "question"}]}
@@ -88,6 +90,33 @@ def project_index():
 
 # ---------------------------------------------------------------- YouTube
 
+def mention(item, text):
+    """A follow-up's answer lands under the top-level comment, so tag who it is for."""
+    handle = "@" + (item.get("author") or "").lstrip("@")
+    if not item.get("parent_id") or handle == "@" or text.lower().startswith(handle.lower()):
+        return text
+    return f"{handle} {text}"
+
+
+def follow_up(convo, is_mine, done, cutoff):
+    """The newest message someone else left in a thread after our last reply in it, or None.
+
+    `convo` is the thread oldest first, top-level comment included, as (key, author, text, ts, ...).
+    Only threads we already answered count - an unanswered top-level comment is its own item.
+    Earlier unanswered messages go along as context, so the thread gets one reply, not several."""
+    last = max((i for i, m in enumerate(convo) if is_mine(m)), default=-1)
+    if last < 0:
+        return None
+    for i in range(len(convo) - 1, last, -1):
+        m = convo[i]
+        if is_mine(m):
+            continue
+        if when(m[3]) < cutoff or m[0] in done:
+            return None
+        return m, [{"author": c[1], "text": c[2]} for c in convo[max(0, i - 6):i]]
+    return None
+
+
 def yt_inbox(cutoff, done, idx):
     from youtube_auth import youtube
     yt = youtube()
@@ -100,21 +129,39 @@ def yt_inbox(cutoff, done, idx):
         for t in r.get("items", []):
             top = t["snippet"]["topLevelComment"]
             s = top["snippet"]
-            if when(s["publishedAt"]) < cutoff:
-                older = True
-                continue
-            key = f"yt:{top['id']}"
-            mine = (s.get("authorChannelId") or {}).get("value") == me
-            answered = any((c["snippet"].get("authorChannelId") or {}).get("value") == me
-                           for c in (t.get("replies") or {}).get("comments", []))
-            if mine or answered or key in done or not t["snippet"].get("canReply", True):
-                continue
             vid = s.get("videoId") or t["snippet"].get("videoId")
             slug, srt = idx.get(vid, (None, None))
-            items.append({"key": key, "platform": "youtube", "comment_id": top["id"], "video_id": vid,
-                          "author": s.get("authorDisplayName"), "text": s.get("textOriginal") or s.get("textDisplay"),
-                          "likes": s.get("likeCount", 0), "published": s["publishedAt"],
-                          "project": slug, "transcript": srt})
+            replies = (t.get("replies") or {}).get("comments", [])
+            if t["snippet"].get("totalReplyCount", 0) > len(replies):    # the thread only carries a few
+                replies = yt.comments().list(part="snippet", parentId=top["id"], maxResults=100,
+                                             textFormat="plainText").execute().get("items", [])
+            convo = sorted([(f"yt:{c['id']}", c["snippet"].get("authorDisplayName"),
+                             c["snippet"].get("textOriginal") or c["snippet"].get("textDisplay"),
+                             c["snippet"]["publishedAt"], (c["snippet"].get("authorChannelId") or {}).get("value"))
+                            for c in [top] + replies], key=lambda m: m[3])
+            if all(when(m[3]) < cutoff for m in convo):
+                older = True
+                continue
+            if not t["snippet"].get("canReply", True):
+                continue
+            base = {"platform": "youtube", "video_id": vid, "project": slug, "transcript": srt}
+            mine = lambda m: m[4] == me
+            if not any(mine(m) for m in convo):
+                key = f"yt:{top['id']}"
+                if key in done or when(s["publishedAt"]) < cutoff:
+                    continue
+                items.append({**base, "key": key, "comment_id": top["id"], "author": s.get("authorDisplayName"),
+                              "text": s.get("textOriginal") or s.get("textDisplay"),
+                              "likes": s.get("likeCount", 0), "published": s["publishedAt"]})
+                continue
+            # A reply under one we already answered: YouTube nests one level, so the answer goes
+            # under the top-level comment (parent_id) and the hide acts on the reply itself.
+            fu = follow_up(convo, mine, done, cutoff)
+            if fu:
+                (key, author, text, ts, _), context = fu
+                items.append({**base, "key": key, "comment_id": key[3:], "parent_id": top["id"],
+                              "author": author, "text": text, "likes": 0, "published": ts,
+                              "context": context})
         token = r.get("nextPageToken")
         if older or not token:
             break
@@ -135,8 +182,8 @@ def yt_act(item, action, text):
     from youtube_auth import youtube
     yt = youtube()
     if action == "reply":
-        r = yt.comments().insert(part="snippet", body={"snippet": {"parentId": item["comment_id"],
-                                                                   "textOriginal": text}}).execute()
+        r = yt.comments().insert(part="snippet", body={"snippet": {"parentId": item.get("parent_id") or item["comment_id"],
+                                                                   "textOriginal": mention(item, text)}}).execute()
         spend(YT_ACTION_COST)
         return r["id"]
     yt.comments().setModerationStatus(id=item["comment_id"], moderationStatus="heldForReview").execute()
@@ -155,23 +202,34 @@ def ig_inbox(cutoff, done, idx, posts):
         if not m.get("comments_count"):
             continue
         for c in instagram.comments_of(m["id"]):
-            key = f"ig:{c['id']}"
-            answered = any(r.get("username") == me for r in (c.get("replies") or {}).get("data", []))
-            if (c.get("username") == me or answered or c.get("hidden") or key in done
-                    or when(c["timestamp"]) < cutoff):
+            if c.get("hidden"):
                 continue
+            key = f"ig:{c['id']}"
             slug, srt = idx.get(m["id"], (None, None))
-            items.append({"key": key, "platform": "instagram", "comment_id": c["id"], "media_id": m["id"],
-                          "author": c.get("username"), "text": c.get("text"), "likes": c.get("like_count", 0),
-                          "published": c["timestamp"], "on": (m.get("caption") or "")[:150],
-                          "permalink": m.get("permalink"), "project": slug, "transcript": srt})
+            base = {"platform": "instagram", "media_id": m["id"], "on": (m.get("caption") or "")[:150],
+                    "permalink": m.get("permalink"), "project": slug, "transcript": srt}
+            convo = sorted([(f"ig:{r['id']}", r.get("username"), r.get("text"), r["timestamp"])
+                            for r in [c] + (c.get("replies") or {}).get("data", [])], key=lambda r: r[3])
+            mine = lambda r: r[1] == me
+            if not any(mine(r) for r in convo):
+                if key in done or when(c["timestamp"]) < cutoff:
+                    continue
+                items.append({**base, "key": key, "comment_id": c["id"], "author": c.get("username"),
+                              "text": c.get("text"), "likes": c.get("like_count", 0), "published": c["timestamp"]})
+                continue
+            # Instagram takes replies only on top-level comments, so the answer goes there (parent_id).
+            fu = follow_up(convo, mine, done, cutoff)
+            if fu:
+                (rkey, author, text, ts), context = fu
+                items.append({**base, "key": rkey, "comment_id": rkey[3:], "parent_id": c["id"],
+                              "author": author, "text": text, "likes": 0, "published": ts, "context": context})
     return items
 
 
 def ig_act(item, action, text):
     import instagram
     if action == "reply":
-        return instagram.reply(item["comment_id"], text)
+        return instagram.reply(item.get("parent_id") or item["comment_id"], mention(item, text))
     instagram.hide(item["comment_id"])
     return None
 
