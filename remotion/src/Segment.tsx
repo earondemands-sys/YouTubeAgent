@@ -2,6 +2,7 @@ import React from 'react';
 import {AbsoluteFill, Easing, Img, interpolate, Loop, OffthreadVideo, useCurrentFrame} from 'remotion';
 import {asset} from './asset';
 import {fontStack} from './fonts';
+import {MockupScene} from './MockupScene';
 import type {Brand, MainProps, Segment as Seg} from './types';
 
 // Entering animation for one segment, over `t` frames from its first frame.
@@ -74,6 +75,8 @@ export const SegmentView: React.FC<{seg: Seg; props: MainProps}> = ({seg, props}
     body = seg.loopFrames ? <Loop durationInFrames={seg.loopFrames}>{video}</Loop> : video;
   } else if (seg.kind === 'image' && seg.src) {
     body = <Img src={asset(seg.src, props.assetBase)} style={fit} />;
+  } else if (seg.kind === 'mockup' && seg.mockupId) {
+    body = <MockupScene id={seg.mockupId} label={seg.text ?? ''} />;
   } else {
     body = <Card text={seg.text ?? ''} brand={props.brand} vertical={vertical} />;
   }

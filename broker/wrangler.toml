@@ -1,0 +1,17 @@
+# The "Connect Instagram" login server. docs/BROKER-DEPLOY.md walks through every step.
+name = "yta-instagram-connect"
+main = "src/worker.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+APP_NAME = "YouTubeAgent"
+API_VERSION = "v23.0"
+INSTAGRAM_APP_ID = "1636359014894306"   # the INSTAGRAM app ID (Instagram -> API setup with Instagram login), not the Meta app ID
+CONTACT_EMAIL = ""      # shown on /privacy - Meta's App Review checks there is one
+
+# Create it with: npx wrangler@4 kv namespace create SESSIONS   - then paste the id it prints.
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "0f0bc7db4710483c8f2e6334098a1fe2"
+
+# The secret is NOT in this file. Set it with: npx wrangler@4 secret put INSTAGRAM_APP_SECRET

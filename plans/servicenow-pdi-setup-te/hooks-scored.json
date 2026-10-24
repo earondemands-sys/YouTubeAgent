@@ -1,0 +1,67 @@
+[
+ {
+  "hook": "Fresher, non-IT, or switching from MERN? Before you learn anything else in ServiceNow, you need 1 free thing. But why first?",
+  "properties": {
+   "SPECIFICITY": 74,
+   "ADDRESS": 66,
+   "STAKES": 62,
+   "CURIOSITY": 93,
+   "BREVITY": 100
+  },
+  "verdict": 72,
+  "band": "STRONG",
+  "formula": "The Question"
+ },
+ {
+  "hook": "You're watching ServiceNow videos but never practicing, and that can waste months. Get your free PDI before you watch another one.",
+  "properties": {
+   "SPECIFICITY": 52,
+   "ADDRESS": 100,
+   "STAKES": 100,
+   "CURIOSITY": 58,
+   "BREVITY": 100
+  },
+  "verdict": 70,
+  "band": "WORKABLE",
+  "formula": "The Warning"
+ },
+ {
+  "hook": "I'm going to show you on screen how to get a free ServiceNow PDI, and the 1 thing that can make you lose it.",
+  "properties": {
+   "SPECIFICITY": 68,
+   "ADDRESS": 96,
+   "STAKES": 62,
+   "CURIOSITY": 41,
+   "BREVITY": 100
+  },
+  "verdict": 60,
+  "band": "WORKABLE",
+  "formula": "The Reveal"
+ },
+ {
+  "hook": "Why can't you learn ServiceNow by just watching videos, and what do you need before you start?",
+  "properties": {
+   "SPECIFICITY": 35,
+   "ADDRESS": 100,
+   "STAKES": 48,
+   "CURIOSITY": 93,
+   "BREVITY": 100
+  },
+  "verdict": 59,
+  "band": "WORKABLE",
+  "formula": "The Question"
+ },
+ {
+  "hook": "By the end of this video you will have 3 things: a free ServiceNow instance, your admin login, and your first incident.",
+  "properties": {
+   "SPECIFICITY": 57,
+   "ADDRESS": 86,
+   "STAKES": 36,
+   "CURIOSITY": 24,
+   "BREVITY": 100
+  },
+  "verdict": 46,
+  "band": "WEAK",
+  "formula": "The Clock"
+ }
+]

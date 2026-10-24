@@ -65,11 +65,12 @@ def main():
          "docs/SETUP-YOUTUBE.md steps 1-4"),
         ("upload", "YouTube sign-in", os.path.exists(os.path.join(ROOT, "secrets", "token.json")), "secrets/token.json",
          ".venv/bin/python scripts/youtube_auth.py (docs/SETUP-YOUTUBE.md step 5)"),
-        ("instagram", "Instagram app keys", bool(keys.get("INSTAGRAM_APP_ID") and keys.get("INSTAGRAM_APP_SECRET")
-                                                 and keys.get("INSTAGRAM_REDIRECT_URI")),
-         "INSTAGRAM_APP_ID / _SECRET / _REDIRECT_URI", "docs/SETUP-INSTAGRAM.md steps 1-4, then add to .env"),
+        ("instagram", "Instagram connect", bool(cfg.get("instagram", {}).get("auth_broker") or keys.get("INSTAGRAM_AUTH_BROKER")
+                                                or (keys.get("INSTAGRAM_APP_ID") and keys.get("INSTAGRAM_APP_SECRET"))),
+         "connect server (instagram.auth_broker) or own app keys in .env",
+         "set instagram.auth_broker (docs/BROKER-DEPLOY.md) or use your own app (docs/SETUP-INSTAGRAM.md)"),
         ("instagram", "Instagram sign-in", os.path.exists(os.path.join(ROOT, "secrets", "instagram_token.json")),
-         "secrets/instagram_token.json", "python3 scripts/instagram_auth.py (docs/SETUP-INSTAGRAM.md step 5)"),
+         "secrets/instagram_token.json", "python3 scripts/instagram_auth.py - sign in, click Allow"),
         ("edit", "whisper", bool(shutil.which("whisper")), version("whisper", ("--help",)) and "installed" or "missing", "pipx install openai-whisper"),
         ("edit", "remotion project", os.path.isdir(os.path.join(ROOT, "remotion", "node_modules")), "remotion/node_modules", "cd remotion && npm install"),
         ("thumbnail", "image API key (optional)", bool(img_key and keys.get(img_key)), f"{img_key or 'images.provider not set'}",

@@ -41,7 +41,9 @@
   "voiceover": {
     "provider": "elevenlabs",
     "voice_id": "",
-    "model": ""
+    "model": "",
+    "kokoro_voice": "am_michael",
+    "kokoro_speed": 1.0
   },
   "images": {
     "provider": "",
@@ -68,7 +70,8 @@
     "default": "ask"
   },
   "instagram": {
-    "handle": "",
+    "handle": "just_in_jay7",
+    "auth_broker": "https://yta-instagram-connect.earondemands.workers.dev",
     "api_version": "v23.0",
     "share_to_feed": true,
     "hashtags": 5,
@@ -76,7 +79,7 @@
     "trending_audio": "manual"
   },
   "engage": {
-    "mode": "ask",
+    "mode": "auto",
     "platforms": [
       "youtube",
       "instagram",

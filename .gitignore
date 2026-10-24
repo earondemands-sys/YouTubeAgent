@@ -14,3 +14,5 @@ tests/sandbox/
 assets/sfx/*
 !assets/sfx/.gitkeep
 engage/
+broker/.wrangler/
+broker/.dev.vars

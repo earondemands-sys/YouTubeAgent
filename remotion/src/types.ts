@@ -28,9 +28,12 @@ export type Style = {
 };
 
 export type Segment = {
-  kind: 'video' | 'image' | 'card';
+  kind: 'video' | 'image' | 'card' | 'mockup';
   src?: string;
   text?: string;
+  // A project can opt into an original, vector-only instructional mockup timeline.
+  // This is intentionally a scene identifier rather than an image or a captured UI.
+  mockupId?: number;
   from: number;
   dur: number;
   trimBefore?: number;

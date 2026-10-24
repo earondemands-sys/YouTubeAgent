@@ -174,6 +174,56 @@ class TestToken(unittest.TestCase):
         self.assertIn("instagram_auth.py", str(cm.exception))
 
 
+class TestConnectServer(unittest.TestCase):
+    """The real broker/src/worker.js on localhost (fake Instagram behind it) and the real client."""
+
+    def setUp(self):
+        self.node = subprocess.Popen(["node", os.path.join(HERE, "..", "broker", "test", "devserver.mjs")],
+                                     stdout=subprocess.PIPE, text=True)
+        self.base = f"http://127.0.0.1:{self.node.stdout.readline().strip()}"
+        self.saved = (instagram_auth.TOKEN, instagram_auth.webbrowser.open)
+        instagram_auth.TOKEN = os.path.join(TMP, "broker-token.json")
+
+    def tearDown(self):
+        self.node.kill()
+        self.node.wait()
+        instagram_auth.TOKEN, instagram_auth.webbrowser.open = self.saved
+
+    def browser(self, allow=True):
+        """Stands in for the user: opens the login link, and Instagram sends them back to /callback."""
+        import urllib.parse, urllib.request
+
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *a, **k):
+                return None
+
+        def open_(url):
+            try:
+                urllib.request.build_opener(NoRedirect).open(url)
+            except urllib.error.HTTPError as e:
+                to = urllib.parse.urlparse(e.headers["Location"])
+            q = urllib.parse.parse_qs(to.query)
+            self.assertEqual(q["redirect_uri"][0], f"{self.base}/callback")
+            back = {"code": "abc#_", "state": q["state"][0]} if allow else {"error": "access_denied",
+                    "error_description": "The user denied your request.", "state": q["state"][0]}
+            urllib.request.urlopen(f"{self.base}/callback?" + urllib.parse.urlencode(back)).read()
+        return open_
+
+    def test_click_allow_and_the_token_arrives(self):
+        instagram_auth.webbrowser.open = self.browser()
+        instagram_auth.sign_in_broker(self.base, wait=20, every=0.2)
+        tok = instagram_auth.load()
+        self.assertEqual((tok["access_token"], tok["user_id"], tok["username"]), ("LONG-TOKEN", "17841400000000000", "earondemands"))
+        self.assertGreater(tok["expires_at"] - time.time(), 59 * 86400)
+        self.assertEqual(oct(os.stat(instagram_auth.TOKEN).st_mode & 0o777), "0o600")
+
+    def test_denied_login_stops_with_instagrams_reason(self):
+        instagram_auth.webbrowser.open = self.browser(allow=False)
+        with self.assertRaises(SystemExit) as cm:
+            instagram_auth.sign_in_broker(self.base, wait=20, every=0.2)
+        self.assertIn("denied", str(cm.exception))
+
+
 class TestCommentPosting(unittest.TestCase):
     def setUp(self):
         for f in (comments.LEDGER, comments.DRAFTS):

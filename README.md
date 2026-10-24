@@ -205,7 +205,10 @@ python3 scripts/doctor.py
 `doctor.py` lists what is ready and what is missing, group by group.
 
 1. **YouTube sign-in:** follow [`docs/SETUP-YOUTUBE.md`](docs/SETUP-YOUTUBE.md) (about 20 min, one time).
-   **Instagram (optional):** follow [`docs/SETUP-INSTAGRAM.md`](docs/SETUP-INSTAGRAM.md) (about 15 min, one time).
+   **Instagram (optional):** switch to a Creator account, then `python3 scripts/instagram_auth.py`
+   and click Allow, or let the Director do it the first time you post. Details:
+   [`docs/SETUP-INSTAGRAM.md`](docs/SETUP-INSTAGRAM.md). Project owners: the one-click connect runs
+   on a small server you deploy once, see [`docs/BROKER-DEPLOY.md`](docs/BROKER-DEPLOY.md).
 2. **Your channel:** edit [`config/channel.json`](config/channel.json), or let the Director ask you on the first run.
 3. **Your face:** put 3–5 transparent PNG cutouts in `assets/brand/faces/` for thumbnails.
 4. **Faceless videos (optional):** put `ELEVENLABS_API_KEY` and `PEXELS_API_KEY` in `.env` and set

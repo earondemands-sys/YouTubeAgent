@@ -8,6 +8,8 @@ Engines:
   elevenlabs  (default) voice from config voiceover.voice_id, model from voiceover.model
               (default eleven_multilingual_v2), ELEVENLABS_API_KEY in .env. Uses the
               /with-timestamps endpoint, so word timings are the engine's own.
+  kokoro      free, local Kokoro-82M (scripts/kokoro_tts.py in .venv-tts). Voice from config
+              voiceover.kokoro_voice (default am_michael). English/Hindi; real word timings in English.
   say         macOS `say`. Timings are estimated from word length - good enough to test the
               pipeline, not to publish.
 
@@ -88,12 +90,25 @@ def say(text, wav):
     return out
 
 
+def kokoro(text, voice, speed, wav):
+    py = os.path.join(ROOT, ".venv-tts", "bin", "python")
+    if not os.path.exists(py):
+        sys.exit("Kokoro is not installed: python3.11 -m venv .venv-tts && .venv-tts/bin/pip install kokoro soundfile")
+    raw, wjson = wav + ".kokoro.wav", wav + ".kokoro.json"
+    r = subprocess.run([py, os.path.join(ROOT, "scripts", "kokoro_tts.py"), "--text", text, "--voice", voice,
+                        "--speed", str(speed), "--out", raw, "--words", wjson], capture_output=True, text=True)
+    if r.returncode != 0:
+        sys.exit(f"Kokoro failed: {(r.stderr or r.stdout).strip()[-400:]}")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", raw, "-ac", "1", "-ar", "48000", wav], check=True)
+    return json.load(open(wjson))
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--script", required=True)
     p.add_argument("--out", required=True)
     p.add_argument("--timestamps", required=True)
-    p.add_argument("--engine", choices=["elevenlabs", "say"], default="elevenlabs")
+    p.add_argument("--engine", choices=["elevenlabs", "kokoro", "say"], default="elevenlabs")
     p.add_argument("--only", type=int, help="re-synthesise just this beat id, reuse the rest")
     a = p.parse_args()
     cfg = json.load(open(CONFIG)) if os.path.exists(CONFIG) else {}
@@ -124,6 +139,8 @@ def main():
             text = b["say"].strip()
             if a.engine == "say":
                 ws = say(text, wav)
+            elif a.engine == "kokoro":
+                ws = kokoro(text, vo.get("kokoro_voice") or "am_michael", vo.get("kokoro_speed") or 1.0, wav)
             else:
                 prev = beats[i - 1]["say"] if i else None
                 nxt = beats[i + 1]["say"] if i + 1 < len(beats) else None

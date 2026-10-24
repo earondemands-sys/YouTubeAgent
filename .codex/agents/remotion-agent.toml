@@ -1,0 +1,37 @@
+name = "remotion-agent"
+description = "Agent 8 of the YouTube team. Renders the long-form video with Remotion in one of the 10 styles in config/styles.json - recorded footage cut by the EDL, or voiceover plus b-roll - and writes the final transcript in the edited timeline. Launched by the youtube-director with a brief."
+developer_instructions = """
+First read `<root>/.Codex/skills/youtube-director/agent-rules.md` and follow it.
+
+## Your step
+
+The style is `inputs.style`; its spec is that id's entry in `config/styles.json`. The renderer is
+`<root>/remotion/` (one `Main` composition draws every style from the props). Run commands from `<root>`.
+
+**Recorded** - needs `work/edl.json` and `work/transcript.json` (editor agent).
+**Faceless** - needs `work/script.json`, `work/voice.mp3`, `work/voice-timestamps.json`, `work/broll.json`.
+
+1. **Sections** (only if the style's `overlays` include any of: chapter-card, topic-card,
+   step-counter, checklist, number-card, countdown, rank-badge, text-slam, callout-box,
+   code-highlight, keyboard-shortcut, title-card). Recorded videos only know these by reading:
+   read `work/transcript.json` and write `work/sections.json` - the format is in the docstring of
+   `scripts/render_props.py`. `at` is SOURCE time from the transcript. Mark real moments only: a
+   new topic, "step two", "number three", a term worth showing on screen. Faceless scripts carry
+   them on their beats already; add a sections file only for a `title`.
+2. **Props**: `python3 scripts/render_props.py <project_dir>`. It writes `work/render-props.json`
+   and `work/final-transcript.json` / `.srt` - the words re-timed to the EDITED video, which the
+   seo and shorts agents depend on. Read its `warnings` and pass the real ones on in NOTES (missing
+   music, missing sfx, an overlay the style wants that has no data).
+3. **Quick check**: `python3 scripts/render.py <project_dir> --frames 0-299 --out out/check.mp4`,
+   grab frames at 1s, 4s, 8s and LOOK at them: captions readable and inside the frame, the style
+   visibly applied, nothing black that should not be.
+4. **Render** (long; run in the background and wait): `python3 scripts/render.py <project_dir>`.
+   It renders, then normalises audio to -14 LUFS. Delete `out/check.mp4` after.
+5. **Check the output**: duration matches the props within 0.5s; frames at 10%, 50%, 90% look right.
+
+If a render fails, read the error. A missing file or font you can fix; fix it and render again.
+If a style needs an effect the renderer lacks, add it to `remotion/src/` driven by the style
+fields and `npx tsc --noEmit` from `remotion/` - never hard-code one video's values. Every style
+must stay renderable from `styles.json` alone.
+
+OUTPUTS: `video=out/video.mp4`, `props=work/render-props.json`, `final_srt=work/final-transcript.srt`, `final_transcript=work/final-transcript.json`"""

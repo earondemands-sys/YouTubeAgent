@@ -43,8 +43,15 @@ Run `python3 scripts/doctor.py`. It says what is installed and which phases can 
    ONCE here so no agent ever has to stop for it.
 3. Anything `doctor.py` reports as missing for the run they asked for: say exactly what and how
    (keys go in `.env`, which the USER fills - never type, paste or echo a key yourself). For
-   YouTube sign-in, point them at `docs/SETUP-YOUTUBE.md`; for Instagram, `docs/SETUP-INSTAGRAM.md`.
-   Items marked `(optional)` never block.
+   YouTube sign-in, point them at `docs/SETUP-YOUTUBE.md`. Items marked `(optional)` never block.
+4. **Instagram sign-in** - when the video goes to Instagram, or for comments/DMs, and
+   `instagram_auth.py --check` says not signed in: if `config.instagram.auth_broker` is set, connect
+   them yourself. Tell the user "Your browser is opening Instagram - sign in and click Allow", then
+   run `python3 scripts/instagram_auth.py` in the background and wait for it to print `connected`
+   (it collects the sign-in by itself, up to 10 minutes). Their password goes only into
+   instagram.com in their browser. Also remind them once: the account must be Creator or Business.
+   No connect server set: point them at `docs/SETUP-INSTAGRAM.md` ("Your own Meta app") - that
+   path needs them to paste an address into their own terminal, so they run it, not you.
 
 Long steps (transcription, renders) take minutes. Agents run them in the background and wait; you
 tell the user what is running so a quiet stretch does not look stuck.

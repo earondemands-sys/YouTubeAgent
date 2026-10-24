@@ -24,8 +24,9 @@ go up?" and options `Reel 1 now, then one a day | All now | Tell me the times | 
 Inputs: `upstream.reels.reels` (`work/reels.json`). Run from `<root>` with `python3 scripts/instagram.py`.
 
 1. **Sign-in**: `python3 scripts/instagram_auth.py --check`. If it says not signed in or expired,
-   block: the user follows `docs/SETUP-INSTAGRAM.md` and runs `python3 scripts/instagram_auth.py`
-   in their own terminal. Never handle their password or token.
+   block with the question "Instagram is not connected - connect it now?" and options
+   `Connect now | Not this time`. The Director runs the connect (the user only clicks Allow in
+   their browser). Never handle their password or token.
 2. **Limits**: `python3 scripts/instagram.py check <project_dir>` must have no FAIL, and
    `python3 scripts/instagram.py limit` must show room. A FAIL here means something changed after
    QA - report failed with the check's detail, the owner is `reels` or `shorts`.

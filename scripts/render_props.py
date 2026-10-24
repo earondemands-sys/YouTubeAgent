@@ -160,7 +160,12 @@ def recorded(pj):
 def faceless(pj):
     script = load(pj.p("work", "script.json"))
     vt = load(pj.p("work", "voice-timestamps.json"))
-    broll = {b["id"]: b for b in load(pj.p("work", "broll.json"), {"beats": []}).get("beats", [])}
+    broll_doc = load(pj.p("work", "broll.json"), {"beats": []})
+    broll = {b["id"]: b for b in broll_doc.get("beats", [])}
+    # A mockup-only b-roll brief is rendered as original vector scenes, not as a fallback card.
+    # The exact scene is still driven by the project's approved plan, so the Main composition
+    # remains usable for ordinary faceless projects with no special assets.
+    mockup_only = broll_doc.get("production_mode") == "remotion-illustrative-mockups-only"
     beats = {b["id"]: b for b in script["beats"]}
     timing = sorted(vt["beats"], key=lambda b: b["start"])
     end_all = vt.get("duration") or timing[-1]["end"]
@@ -175,7 +180,10 @@ def faceless(pj):
         asset = broll.get(t["id"], {})
         file = asset.get("file")
         kind = asset.get("kind", "none")
-        if kind in ("video", "image") and file and os.path.exists(pj.p(file)):
+        if mockup_only:
+            seg = {"kind": "mockup", "mockupId": int(t["id"]), "text": beat.get("overlay_text") or "",
+                   "from": a, "dur": b - a, "index": i}
+        elif kind in ("video", "image") and file and os.path.exists(pj.p(file)):
             seg = {"kind": kind, "src": file, "from": a, "dur": b - a, "index": i, "muted": True}
             if kind == "video":
                 clip = probe_duration(pj.p(file)) or 0
@@ -239,6 +247,11 @@ def captions(pj, words):
 
 
 def zooms(pj, segs, total):
+    # Mockup-only lessons are designed as whole-frame instructional diagrams. A crop-oriented
+    # punch-in can cut off their persistent disclosure or browser chrome, so preserve their
+    # intentionally composed frame rather than pretending a screen-recording cursor exists.
+    if segs and all(s.get("kind") == "mockup" for s in segs):
+        return []
     z = pj.style.get("zoom", {})
     scale = z.get("scale", 1.0)
     every = z.get("punch_in_every")
